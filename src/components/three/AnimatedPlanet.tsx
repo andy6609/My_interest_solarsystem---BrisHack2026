@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSpring, animated } from '@react-spring/three';
 import { Planet } from './Planet';
 import * as THREE from 'three';
@@ -14,22 +14,20 @@ interface Props {
 
   // 전환 타입
   entering?: boolean;      // scale 0 → 1
-  exiting?:  boolean;      // scale 1 → 0 → unmount
-  splitFrom?: THREE.Vector3; // 분열 시 부모 위치에서 팽창
+  exiting?: boolean;      // scale 1 → 0 → unmount
   onExitDone?: () => void;
 }
 
 const SPRING_CFG = {
-  mass:     1.5,
-  tension:  100,
+  mass: 1.5,
+  tension: 100,
   friction: 18,
 };
 
 export function AnimatedPlanet({
   data, index, total, onClick,
   entering = false,
-  exiting  = false,
-  splitFrom,
+  exiting = false,
   onExitDone,
 }: Props) {
   const [mounted, setMounted] = useState(true);

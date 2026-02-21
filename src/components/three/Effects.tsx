@@ -55,22 +55,23 @@ function ProductionEffects() {
 function DevEffects() {
   // leva는 클라이언트 사이드에서만 동작하므로 dynamic import 패턴
   // 여기서는 직접 사용 (이미 'use client')
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { useControls } = require('leva');
 
   const bloom = useControls('Bloom', {
-    threshold: { value: cfg.bloom.luminanceThreshold, min: 0,   max: 1,   step: 0.01 },
-    intensity:  { value: cfg.bloom.intensity,          min: 0,   max: 5,   step: 0.1  },
-    smoothing:  { value: cfg.bloom.luminanceSmoothing, min: 0,   max: 1,   step: 0.01 },
+    threshold: { value: cfg.bloom.luminanceThreshold, min: 0, max: 1, step: 0.01 },
+    intensity: { value: cfg.bloom.intensity, min: 0, max: 5, step: 0.1 },
+    smoothing: { value: cfg.bloom.luminanceSmoothing, min: 0, max: 1, step: 0.01 },
   });
 
   const vignette = useControls('Vignette', {
-    offset:   { value: cfg.vignette.offset,   min: 0, max: 1,   step: 0.01 },
+    offset: { value: cfg.vignette.offset, min: 0, max: 1, step: 0.01 },
     darkness: { value: cfg.vignette.darkness, min: 0, max: 1.5, step: 0.01 },
   });
 
   const ca = useControls('ChromaticAberration', {
     enabled: { value: cfg.chromaticAberration.enabled },
-    offset:  { value: cfg.chromaticAberration.offset[0], min: 0, max: 0.005, step: 0.0001 },
+    offset: { value: cfg.chromaticAberration.offset[0], min: 0, max: 0.005, step: 0.0001 },
   });
 
   return (

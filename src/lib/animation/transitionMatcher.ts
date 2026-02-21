@@ -1,11 +1,11 @@
 import type { CategoryNode, PlanetVisualData } from '@/types';
 
 export interface TransitionPlan {
-  persist:    Array<{ from: PlanetVisualData; to: PlanetVisualData }>;
-  split:      Array<{ from: PlanetVisualData; to: PlanetVisualData[] }>;
-  merge:      Array<{ from: PlanetVisualData[]; to: PlanetVisualData }>;
-  appear:     PlanetVisualData[];
-  disappear:  PlanetVisualData[];
+  persist: Array<{ from: PlanetVisualData; to: PlanetVisualData }>;
+  split: Array<{ from: PlanetVisualData; to: PlanetVisualData[] }>;
+  merge: Array<{ from: PlanetVisualData[]; to: PlanetVisualData }>;
+  appear: PlanetVisualData[];
+  disappear: PlanetVisualData[];
 }
 
 // ─── 트리 유틸 ───
@@ -29,15 +29,6 @@ function getChildrenNames(name: string, tree: CategoryNode[]): string[] {
   return (node.children ?? []).map((c) => c.name);
 }
 
-function getParentName(name: string, tree: CategoryNode[]): string | null {
-  for (const top of tree) {
-    for (const child of top.children ?? []) {
-      if (child.name === name) return top.name;
-    }
-  }
-  return null;
-}
-
 // ─── 메인 매칭 ───
 
 export function planTransition(
@@ -49,8 +40,8 @@ export function planTransition(
     persist: [], split: [], merge: [], appear: [], disappear: [],
   };
 
-  const matchedOldIds  = new Set<string>();
-  const matchedNewIds  = new Set<string>();
+  const matchedOldIds = new Set<string>();
+  const matchedNewIds = new Set<string>();
 
   // 1. 이름 동일 → persist
   for (const np of newPlanets) {
@@ -66,7 +57,7 @@ export function planTransition(
   for (const op of oldPlanets) {
     if (matchedOldIds.has(op.id)) continue;
     const childNames = getChildrenNames(op.name, tree);
-    const children   = newPlanets.filter(
+    const children = newPlanets.filter(
       (np) => childNames.includes(np.name) && !matchedNewIds.has(np.id)
     );
     if (children.length > 1) {
@@ -80,7 +71,7 @@ export function planTransition(
   for (const np of newPlanets) {
     if (matchedNewIds.has(np.id)) continue;
     const childNames = getChildrenNames(np.name, tree);
-    const fromOld    = oldPlanets.filter(
+    const fromOld = oldPlanets.filter(
       (op) => childNames.includes(op.name) && !matchedOldIds.has(op.id)
     );
     if (fromOld.length > 1) {

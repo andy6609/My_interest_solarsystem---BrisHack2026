@@ -68,6 +68,7 @@ export default function SolarSystemPage() {
     } else if (planets.length > 0) {
       setPhase('solar-system');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSample, phase, parsedData]);
 
   const handlePlanetClick = (planet: PlanetVisualData) => {
@@ -300,7 +301,6 @@ export default function SolarSystemPage() {
           planetCount={planetCount}
           onPlanetClick={handlePlanetClick}
           onDeselect={handleDeselect}
-          onCountChange={handleCountChange}
         />
 
         {/* 왼쪽 패널 토글 버튼 */}

@@ -11,15 +11,15 @@ import * as THREE from 'three';
 const StarCoreShaderMaterial = shaderMaterial(
   // Uniforms
   {
-    uTime:             0,
-    uColor1:           new THREE.Color('#ffffff'),  // 중심 (밝은 흰색)
-    uColor2:           new THREE.Color('#4FC3F7'),  // 중간 (시안)
-    uColor3:           new THREE.Color('#0288D1'),  // 외곽 (진한 파랑)
-    uNoiseScale:       3.0,
-    uNoiseSpeed:       0.8,
-    uFresnelPower:     2.5,
-    uPulseSpeed:       1.5,
-    uDistortStrength:  0.15,
+    uTime: 0,
+    uColor1: new THREE.Color('#ffffff'),  // 중심 (밝은 흰색)
+    uColor2: new THREE.Color('#4FC3F7'),  // 중간 (시안)
+    uColor3: new THREE.Color('#0288D1'),  // 외곽 (진한 파랑)
+    uNoiseScale: 3.0,
+    uNoiseSpeed: 0.8,
+    uFresnelPower: 2.5,
+    uPulseSpeed: 1.5,
+    uDistortStrength: 0.15,
   },
 
   // ─── Vertex Shader ───
@@ -149,9 +149,11 @@ extend({ StarCoreShaderMaterial });
 
 // TypeScript 타입 선언
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     interface IntrinsicElements {
       starCoreShaderMaterial: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ref?: React.Ref<any>;
         transparent?: boolean;
         depthWrite?: boolean;
@@ -165,7 +167,7 @@ declare global {
 // ─────────────────────────────────────────────
 function LightBeam({ direction }: { direction: 'up' | 'down' }) {
   const matRef = useRef<THREE.MeshBasicMaterial>(null);
-  const ySign  = direction === 'up' ? 1 : -1;
+  const ySign = direction === 'up' ? 1 : -1;
   const HEIGHT = 24;
 
   useFrame(({ clock }) => {
@@ -178,8 +180,8 @@ function LightBeam({ direction }: { direction: 'up' | 'down' }) {
     <mesh position={[0, ySign * (HEIGHT / 2), 0]}>
       <cylinderGeometry
         args={[
-          direction === 'up' ? 0.02  : 0.25,  // top radius
-          direction === 'up' ? 0.25  : 0.02,  // bottom radius
+          direction === 'up' ? 0.02 : 0.25,  // top radius
+          direction === 'up' ? 0.25 : 0.02,  // bottom radius
           HEIGHT,
           8,
         ]}
@@ -200,6 +202,7 @@ function LightBeam({ direction }: { direction: 'up' | 'down' }) {
 // 메인 항성 컴포넌트 (커스텀 셰이더)
 // ─────────────────────────────────────────────
 export function CentralStar() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const matRef = useRef<any>(null);
 
   useFrame(({ clock }) => {

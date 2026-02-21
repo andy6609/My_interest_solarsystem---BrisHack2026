@@ -16,28 +16,30 @@ import type { CategoryNode, PlanetVisualData } from '@/types';
 
 let Perf: React.ComponentType<{ position?: string }> | null = null;
 if (process.env.NODE_ENV === 'development') {
-  try { Perf = require('r3f-perf').Perf; } catch { /* 무시 */ }
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    Perf = require('r3f-perf').Perf;
+  } catch { /* 무시 */ }
 }
 
 interface Props {
-  planets:       PlanetVisualData[];
-  categoryTree:  CategoryNode[];
+  planets: PlanetVisualData[];
+  categoryTree: CategoryNode[];
   totalQuestions: number;
-  planetCount:   number;
+  planetCount: number;
   onPlanetClick: (planet: PlanetVisualData) => void;
-  onDeselect:    () => void;
-  onCountChange: (count: number) => void;
+  onDeselect: () => void;
 }
 
 export function SolarSystem({
   planets, categoryTree, totalQuestions, planetCount,
-  onPlanetClick, onDeselect, onCountChange,
+  onPlanetClick, onDeselect,
 }: Props) {
   const { background, camera, fog, performance } = SCENE_CONFIG;
   const controllerRef = useRef<SceneControllerHandle>(null);
 
   const { slots, changePlanetCount, removeSlot } = useTransitionPlanets({
-    tree:           categoryTree,
+    tree: categoryTree,
     initialPlanets: planets,
     totalQuestions,
   });
@@ -47,7 +49,7 @@ export function SolarSystem({
     if (categoryTree.length > 0) {
       changePlanetCount(planetCount);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planetCount, categoryTree]);
 
   const handlePlanetClick = (planet: PlanetVisualData, position: THREE.Vector3) => {
@@ -76,7 +78,7 @@ export function SolarSystem({
 
       <Stars
         radius={background.stars.radius} depth={background.stars.depth}
-        count={background.stars.count}   factor={background.stars.factor}
+        count={background.stars.count} factor={background.stars.factor}
         saturation={background.stars.saturation} fade speed={background.stars.speed}
       />
       <ambientLight intensity={0.05} />

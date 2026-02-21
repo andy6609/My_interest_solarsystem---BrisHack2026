@@ -3,7 +3,6 @@ import Anthropic from '@anthropic-ai/sdk';
 import {
   HIERARCHY_PROMPT,
   MERGE_PROMPT,
-  chunkArray,
   parseJsonSafe,
   normalizeCategoryTree,
 } from '@/lib/analysis/classifier';

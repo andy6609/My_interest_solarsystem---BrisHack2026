@@ -2,7 +2,6 @@
 
 import { useCallback, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSolarStore } from '@/lib/store/useSolarStore';
 import type { ParsedData } from '@/types';
 
 interface Props {
@@ -138,11 +137,10 @@ export function UploadModal({ isOpen, onClose, onParsed }: Props) {
             {/* 드래그 존 */}
             {!preview && (
               <div
-                className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
-                  isDragging
+                className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${isDragging
                     ? 'border-star-blue bg-star-blue/10'
                     : 'border-white/20 hover:border-white/40'
-                }`}
+                  }`}
                 onDragOver={(e) => {
                   e.preventDefault();
                   setIsDragging(true);
@@ -199,9 +197,8 @@ export function UploadModal({ isOpen, onClose, onParsed }: Props) {
                 {/* 플랫폼 배지 */}
                 <div className="flex items-center gap-2">
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium border ${
-                      PLATFORM_COLORS[preview.platform] || PLATFORM_COLORS.unknown
-                    }`}
+                    className={`px-3 py-1 rounded-full text-xs font-medium border ${PLATFORM_COLORS[preview.platform] || PLATFORM_COLORS.unknown
+                      }`}
                   >
                     {PLATFORM_LABELS[preview.platform] || preview.platform}
                   </span>

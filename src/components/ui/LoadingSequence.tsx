@@ -72,7 +72,6 @@ export function LoadingSequence({ currentStep, questionCount }: Props) {
           {STEPS.map((step, idx) => {
             const isDone = idx < currentIdx;
             const isCurrent = idx === currentIdx;
-            const isPending = idx > currentIdx;
 
             return (
               <motion.div
@@ -80,9 +79,8 @@ export function LoadingSequence({ currentStep, questionCount }: Props) {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: idx * 0.08 }}
-                className={`flex items-center gap-3 py-2 px-3 rounded-lg transition-colors ${
-                  isCurrent ? 'bg-star-blue/10 border border-star-blue/30' : ''
-                }`}
+                className={`flex items-center gap-3 py-2 px-3 rounded-lg transition-colors ${isCurrent ? 'bg-star-blue/10 border border-star-blue/30' : ''
+                  }`}
               >
                 {/* 아이콘 */}
                 <div className="w-5 h-5 flex-shrink-0 flex items-center justify-center">
@@ -102,13 +100,12 @@ export function LoadingSequence({ currentStep, questionCount }: Props) {
                 {/* 라벨 */}
                 <div className="flex-1">
                   <span
-                    className={`text-sm font-medium ${
-                      isDone
-                        ? 'text-gray-500 line-through'
-                        : isCurrent
+                    className={`text-sm font-medium ${isDone
+                      ? 'text-gray-500 line-through'
+                      : isCurrent
                         ? 'text-white'
                         : 'text-gray-600'
-                    }`}
+                      }`}
                   >
                     {step.label}
                   </span>

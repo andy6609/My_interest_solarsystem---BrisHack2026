@@ -19,9 +19,9 @@ const fadeUp = {
 
 function TrendBadge({ trend }: { trend: 'rising' | 'stable' | 'declining' }) {
   const cfg = {
-    rising:   { label: '↑ Rising',   cls: 'bg-green-500/20 text-green-400 border-green-500/30' },
-    stable:   { label: '→ Stable',   cls: 'bg-gray-500/20  text-gray-400  border-gray-500/30' },
-    declining:{ label: '↓ Declining',cls: 'bg-red-500/20   text-red-400   border-red-500/30' },
+    rising: { label: '↑ Rising', cls: 'bg-green-500/20 text-green-400 border-green-500/30' },
+    stable: { label: '→ Stable', cls: 'bg-gray-500/20  text-gray-400  border-gray-500/30' },
+    declining: { label: '↓ Declining', cls: 'bg-red-500/20   text-red-400   border-red-500/30' },
   }[trend];
 
   return (
@@ -100,7 +100,7 @@ export function RightPanel({ planet, onClose }: Props) {
               variants={fadeUp}
               className="text-xs text-gray-300 py-2 border-b border-white/5 leading-relaxed"
             >
-              "{q}"
+              &quot;{q}&quot;
             </motion.li>
           ))}
         </motion.ul>
