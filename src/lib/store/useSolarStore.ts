@@ -9,7 +9,7 @@ import type {
 } from '@/types';
 import { PLANET_COUNT_DEFAULT } from '@/lib/utils/constants';
 
-export const useSolarStore = create<SolarStoreType>()(
+export const useSolarStore = create<SolarStore>()(
   persist(
     (set) => ({
       phase: 'landing',
