@@ -98,6 +98,7 @@ export default function SolarSystemPage() {
       if (!json.success) throw new Error(json.error);
 
       setLoadingStep('render');
+      if (json.tree) setCategoryTree(json.tree);
       setPlanets(json.planets);
       setTotalQuestions(json.metadata.totalQuestions);
       await sleep(600);
