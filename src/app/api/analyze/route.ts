@@ -8,6 +8,7 @@ import {
   normalizeCategoryTree,
 } from '@/lib/analysis/classifier';
 import { getPlanetsForCount } from '@/lib/analysis/hierarchy';
+import type { CategoryNode, UnifiedMessage } from '@/types';
 
 const anthropic = new Anthropic();
 
