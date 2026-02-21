@@ -38,3 +38,6 @@ next-env.d.ts
 # Source directories to ignore
 /myuniverse/
 /myuniverse 복사본/
+
+# Markdown files
+*.md
