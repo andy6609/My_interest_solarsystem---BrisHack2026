@@ -8,7 +8,7 @@ import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { SCENE_CONFIG } from '@/config/sceneConfig';
 
 export interface SceneControllerHandle {
-  focusOnPlanet: (pos: THREE.Vector3, radius: number) => void;
+  focusOnPlanet: (obj: THREE.Object3D, radius: number) => void;
   resetView: () => void;
 }
 
@@ -20,7 +20,7 @@ interface Props {
 export const SceneController = forwardRef<SceneControllerHandle, Props>(
   function SceneController({ onBackgroundClick }, ref) {
     const controlsRef = useRef<OrbitControlsImpl>(null);
-    const { focusOnPlanet, resetView, isAnimating } = useCameraTransition();
+    const { focusOnPlanet, resetView, isAnimating } = useCameraTransition(controlsRef);
     const { camera } = SCENE_CONFIG;
 
     // 트랜지션 중 OrbitControls 비활성화

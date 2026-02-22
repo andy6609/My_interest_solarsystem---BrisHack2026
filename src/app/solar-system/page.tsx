@@ -10,8 +10,6 @@ import { AnimatedPanel } from '@/components/ui/AnimatedPanel';
 import { LeftPanel } from '@/components/ui/LeftPanel';
 import { RightPanel } from '@/components/ui/RightPanel';
 import { AnalysisBadge, type AnalysisProgress } from '@/components/ui/AnalysisBadge';
-import { getPlanetsForCount } from '@/lib/analysis/hierarchy';
-import { calculateVisuals } from '@/lib/analysis/visualMapper';
 import type { PlanetVisualData } from '@/types';
 
 // ─── 유틸 ───
@@ -79,15 +77,11 @@ export default function SolarSystemPage() {
     setSelectedPlanet(null);
   };
 
-  // 슬라이더 변경 시 categoryTree에서 행성 재계산
+  // 슬라이더 변경 시 planetCount만 업데이트.
+  // 실제 행성 전환(exit/enter 애니메이션)은 SolarSystem → useTransitionPlanets가 전담.
   const handleCountChange = useCallback((newCount: number) => {
     setPlanetCount(newCount);
-    if (categoryTree.length > 0 && totalQuestions > 0) {
-      const newCategories = getPlanetsForCount(categoryTree, newCount, totalQuestions);
-      const newPlanets = calculateVisuals(newCategories, totalQuestions);
-      setPlanets(newPlanets);
-    }
-  }, [categoryTree, totalQuestions, setPlanetCount, setPlanets]);
+  }, [setPlanetCount]);
 
   // ── 샘플 데이터 로드 ──
 
@@ -301,6 +295,7 @@ export default function SolarSystemPage() {
           planetCount={planetCount}
           onPlanetClick={handlePlanetClick}
           onDeselect={handleDeselect}
+
         />
 
         {/* 왼쪽 패널 토글 버튼 */}

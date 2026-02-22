@@ -52,8 +52,8 @@ export function SolarSystem({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planetCount, categoryTree]);
 
-  const handlePlanetClick = (planet: PlanetVisualData, position: THREE.Vector3) => {
-    controllerRef.current?.focusOnPlanet(position, planet.radius);
+  const handlePlanetClick = (planet: PlanetVisualData, object: THREE.Object3D) => {
+    controllerRef.current?.focusOnPlanet(object, planet.radius);
     onPlanetClick(planet);
   };
 

@@ -10,7 +10,7 @@ interface Props {
   data: PlanetVisualData;
   index: number;
   total: number;
-  onClick: (position: THREE.Vector3) => void;
+  onClick: (object: THREE.Object3D) => void;
 
   // 전환 타입
   entering?: boolean;      // scale 0 → 1

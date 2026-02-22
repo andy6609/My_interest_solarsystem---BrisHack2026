@@ -12,12 +12,12 @@ interface Props {
   data: PlanetVisualData;
   index: number;
   total: number;
-  onClick: (position: THREE.Vector3) => void;
+  onClick: (object: THREE.Object3D) => void;
 }
 
 export function Planet({ data, index, total, onClick }: Props) {
-  const groupRef   = useRef<THREE.Group>(null);
-  const glowRef    = useRef<THREE.MeshBasicMaterial>(null);
+  const groupRef = useRef<THREE.Group>(null);
+  const glowRef = useRef<THREE.MeshBasicMaterial>(null);
   const [hovered, setHovered] = useState(false);
   const { camera } = useThree();
 
@@ -27,9 +27,9 @@ export function Planet({ data, index, total, onClick }: Props) {
   // 카메라 거리 기반 LOD
   const [camDist, setCamDist] = useState(30);
 
-  const segments     = camDist < 10 ? 64 : camDist < 25 ? 32 : 16;
-  const showMoons    = camDist < 20;
-  const showLabel    = camDist < 30;
+  const segments = camDist < 10 ? 64 : camDist < 25 ? 32 : 16;
+  const showMoons = camDist < 20;
+  const showLabel = camDist < 30;
 
   useFrame(({ clock }) => {
     if (!groupRef.current) return;
@@ -77,7 +77,7 @@ export function Planet({ data, index, total, onClick }: Props) {
           scale={scale}
           onClick={(e) => {
             e.stopPropagation();
-            onClick(groupRef.current?.position.clone() ?? new THREE.Vector3());
+            if (groupRef.current) onClick(groupRef.current);
           }}
           onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
           onPointerOut={() => { setHovered(false); document.body.style.cursor = 'default'; }}
