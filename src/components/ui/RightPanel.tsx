@@ -131,7 +131,7 @@ export function RightPanel({ planet, onClose }: Props) {
             {Math.round(planet.recentActivityScore * 100)}%
           </p>
         </div>
-        <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+        <div className="h-1.5 bg-white/10 rounded-full overflow-hidden mb-1.5">
           <motion.div
             className="h-full rounded-full"
             style={{ backgroundColor: planet.color }}
@@ -140,6 +140,9 @@ export function RightPanel({ planet, onClose }: Props) {
             transition={{ duration: 0.6, ease: 'easeOut' }}
           />
         </div>
+        <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-2 leading-relaxed">
+          * Calculated based on the frequency and recency of questions asked within the last 30 days.
+        </p>
       </motion.div>
     </motion.div>
   );
