@@ -23,7 +23,7 @@ export function Planet({ data, index, total, selected = false, onClick }: Props)
   const { camera } = useThree();
 
   // 궤도 파라미터 — 결정적 생성 (리렌더 시 동일)
-  const orbit = useMemo(() => getOrbitParams(index, total), [index, total]);
+  const orbit = useMemo(() => getOrbitParams(data.id), [data.id]);
 
   // 카메라 거리 기반 LOD
   const [camDist, setCamDist] = useState(30);

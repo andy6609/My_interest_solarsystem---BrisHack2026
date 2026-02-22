@@ -130,6 +130,49 @@ onCountChange={handleCountChange}        // ← 행성 동적 재계산
 
 ---
 
+---
+
+## 행성 궤도선 불일치 수정 (2026-02-22)
+
+### 문제
+행성이 궤도선을 따라가지 않고 벗어나는 현상 (rotation 값이 클수록 심해짐)
+
+### 원인 1: Y축 회전 방향 불일치
+- `EllipticalOrbit` 컴포넌트: `<group rotation={[0, rotation, 0]}>` → Ry(+R)
+- `getPositionOnEllipse()`: 수동 회전 수식이 Ry(−R) 방향 → **반대 방향**
+
+**수정 (`EllipticalOrbit.tsx:82-86`):**
+```typescript
+// Before (Ry(-R)):
+x * cosR - z * sinR,  y,  x * sinR + z * cosR
+
+// After (Ry(+R)):
+x * cosR + z * sinR,  y,  -x * sinR + z * cosR
+```
+
+### 원인 2: 궤도 파라미터가 index/total에 의존
+- `getOrbitParams(index, total)`이 행성 슬라이더 변경 시 모든 행성의 궤도 재계산 → 궤도 점프
+
+**수정 (`EllipticalOrbit.tsx:93-117`):**
+- `hashStringToNumber(str)` 헬퍼 추가 (DJB2 변형, 0~1 반환)
+- `getOrbitParams(index, total)` → `getOrbitParams(planetId: string)`
+- 모든 파라미터를 planet ID 해시에서 결정적으로 생성 → planet count 변경에도 안정적
+
+**수정 (`Planet.tsx:26`):**
+```typescript
+// Before:
+const orbit = useMemo(() => getOrbitParams(index, total), [index, total]);
+
+// After:
+const orbit = useMemo(() => getOrbitParams(data.id), [data.id]);
+```
+
+### 수정 파일
+- `src/components/three/EllipticalOrbit.tsx`
+- `src/components/three/Planet.tsx`
+
+---
+
 ## 커밋 히스토리
 
 | 커밋 ID | 메시지 |

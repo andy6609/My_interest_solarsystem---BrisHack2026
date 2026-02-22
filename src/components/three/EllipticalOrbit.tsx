@@ -80,27 +80,37 @@ export function getPositionOnEllipse(
   const sinR = Math.sin(rotation);
 
   return new THREE.Vector3(
-    x * cosR - z * sinR,
+    x * cosR + z * sinR,
     y,
-    x * sinR + z * cosR
+    -x * sinR + z * cosR
   );
 }
 
 // ─────────────────────────────────────────────
-// 행성 인덱스로부터 궤도 파라미터 결정적 생성
-// (Math.random 대신 sin 기반 시드 → 리렌더마다 동일)
+// 문자열 → 결정적 0~1 해시 (DJB2 변형)
 // ─────────────────────────────────────────────
-export function getOrbitParams(index: number, total: number) {
-  // sin 시드 기반 의사난수 (0~1)
-  const r1 = (Math.sin(index * 127.1 + 311.7) * 43758.5453) % 1;
-  const r2 = (Math.sin(index * 269.5 + 183.3) * 43758.5453) % 1;
-  const absR1 = Math.abs(r1);
-  const absR2 = Math.abs(r2);
+function hashStringToNumber(str: string): number {
+  let hash = 5381;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) + hash + str.charCodeAt(i)) | 0;
+  }
+  return Math.abs(hash) / 2147483647; // 0~1
+}
+
+// ─────────────────────────────────────────────
+// 행성 ID로부터 궤도 파라미터 결정적 생성
+// (planet count 변경에도 안정적)
+// ─────────────────────────────────────────────
+export function getOrbitParams(planetId: string) {
+  const h1 = hashStringToNumber(planetId);
+  const h2 = hashStringToNumber(planetId + '_ecc');
+  const h3 = hashStringToNumber(planetId + '_inc');
+  const h4 = hashStringToNumber(planetId + '_rot');
 
   return {
-    semiMajorAxis: 4 + (index / Math.max(total - 1, 1)) * 16,
-    eccentricity:  0.1 + absR1 * 0.2,              // 0.1~0.3
-    inclination:   (absR2 - 0.5) * 0.6,             // -0.3~0.3 rad
-    rotation:      (index / Math.max(total, 1)) * Math.PI * 0.6,
+    semiMajorAxis: 4 + h1 * 16,                    // 4~20
+    eccentricity:  0.1 + h2 * 0.2,                 // 0.1~0.3
+    inclination:   (h3 - 0.5) * 0.6,               // -0.3~0.3 rad
+    rotation:      h4 * Math.PI * 0.6,              // 0~0.6π rad
   };
 }
