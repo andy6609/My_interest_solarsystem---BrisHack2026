@@ -1,44 +1,33 @@
 import type { ParsedData, UnifiedMessage } from '@/types';
 
-interface ChatGPTExport {
+interface ChatGPTCleanMessage {
+  role: string;
+  content: string;
+  create_time: number;
+}
+
+interface ChatGPTCleanConversation {
+  id: string;
   title: string;
   create_time: number;
-  update_time: number;
-  mapping: Record<string, {
-    id: string;
-    message: {
-      author: { role: string };
-      content: { parts: (string | object)[] };
-      create_time: number;
-    } | null;
-    parent: string | null;
-    children: string[];
-  }>;
+  messages: ChatGPTCleanMessage[];
 }
 
 export function parseChatGPT(raw: string): ParsedData {
-  const conversations: ChatGPTExport[] = JSON.parse(raw);
+  const conversations: ChatGPTCleanConversation[] = JSON.parse(raw);
   const messages: UnifiedMessage[] = [];
 
   for (const conv of conversations) {
-    for (const [nodeId, node] of Object.entries(conv.mapping)) {
-      if (!node.message) continue;
-      if (node.message.author.role === 'system') continue;
-
-      const content = node.message.content.parts
-        .filter((p) => typeof p === 'string')
-        .join('\n')
-        .trim();
-
-      if (!content) continue;
+    for (const msg of conv.messages) {
+      if (!msg.content?.trim()) continue;
 
       messages.push({
-        id: nodeId,
-        role: node.message.author.role === 'user' ? 'user' : 'assistant',
-        content,
-        timestamp: new Date(node.message.create_time * 1000).toISOString(),
+        id: `${conv.id}-${msg.create_time}`,
+        role: msg.role === 'user' ? 'user' : 'assistant',
+        content: msg.content,
+        timestamp: new Date(msg.create_time * 1000).toISOString(),
         platform: 'chatgpt',
-        conversationId: conv.title || 'untitled',
+        conversationId: conv.id,
         conversationTitle: conv.title,
       });
     }

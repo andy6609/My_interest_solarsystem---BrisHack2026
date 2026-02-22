@@ -10,7 +10,7 @@ export default function LandingPage() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openGuide, setOpenGuide] = useState<'gemini' | 'chatgpt' | null>(null);
-  const { setParsedData, setPhase } = useSolarStore();
+  const { setParsedData, setPhase, setUserName, userName } = useSolarStore();
 
   // 업로드 완료 → 분석 페이지로 이동
   const handleParsed = (data: ParsedData) => {
@@ -65,6 +65,15 @@ export default function LandingPage() {
         </p>
 
         <div className="flex flex-col gap-3 w-full max-w-xs mx-auto">
+          {/* 이름 입력란 */}
+          <input
+            type="text"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            placeholder="Your name (optional)"
+            className="w-full py-3 px-4 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-500 text-base focus:outline-none focus:border-star-blue/60 focus:bg-white/10 transition-colors"
+          />
+
           <button
             onClick={handleSample}
             className="w-full py-3 rounded-xl bg-star-blue text-space-bg font-bold text-base hover:bg-star-glow transition-colors shadow-[0_0_20px_rgba(79,195,247,0.3)]"

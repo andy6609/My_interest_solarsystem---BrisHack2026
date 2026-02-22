@@ -1,9 +1,10 @@
 'use client';
 
-import { shaderMaterial } from '@react-three/drei';
+import { shaderMaterial, Html } from '@react-three/drei';
 import { extend, useFrame } from '@react-three/fiber';
 import { useRef } from 'react';
 import * as THREE from 'three';
+import { useSolarStore } from '@/lib/store/useSolarStore';
 
 // ─────────────────────────────────────────────
 // 셰이더 머티리얼 정의
@@ -204,6 +205,7 @@ function LightBeam({ direction }: { direction: 'up' | 'down' }) {
 export function CentralStar() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const matRef = useRef<any>(null);
+  const userName = useSolarStore((s) => s.userName);
 
   useFrame(({ clock }) => {
     if (matRef.current) {
@@ -275,6 +277,28 @@ export function CentralStar() {
       {/* 수직 빛줄기 */}
       <LightBeam direction="up" />
       <LightBeam direction="down" />
+
+      {/* 사용자 이름 라벨 */}
+      {userName && (
+        <Html
+          position={[0, 2.8, 0]}
+          center
+          distanceFactor={18}
+          style={{ pointerEvents: 'none' }}
+        >
+          <div
+            className="px-3 py-1 rounded-full text-sm font-semibold text-white whitespace-nowrap"
+            style={{
+              background: 'rgba(79,195,247,0.15)',
+              border: '1px solid rgba(79,195,247,0.5)',
+              textShadow: '0 0 10px rgba(79,195,247,0.8)',
+              backdropFilter: 'blur(4px)',
+            }}
+          >
+            {userName}
+          </div>
+        </Html>
+      )}
     </group>
   );
 }

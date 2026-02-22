@@ -115,6 +115,7 @@ export interface SolarStore {
   planetCount: number;
   selectedPlanet: PlanetVisualData | null;
   totalQuestions: number;
+  userName: string;
 
   setPhase: (phase: AppPhase) => void;
   setParsedData: (data: ParsedData) => void;
@@ -123,5 +124,6 @@ export interface SolarStore {
   setPlanetCount: (count: number) => void;
   setSelectedPlanet: (planet: PlanetVisualData | null) => void;
   setTotalQuestions: (count: number) => void;
+  setUserName: (name: string) => void;
   reset: () => void;
 }

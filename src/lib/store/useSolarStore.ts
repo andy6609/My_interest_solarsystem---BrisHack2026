@@ -19,6 +19,7 @@ export const useSolarStore = create<SolarStore>()(
       planetCount: PLANET_COUNT_DEFAULT,
       selectedPlanet: null,
       totalQuestions: 0,
+      userName: '',
 
       setPhase: (phase: AppPhase) => set({ phase }),
       setParsedData: (data: ParsedData) => set({ parsedData: data }),
@@ -28,6 +29,7 @@ export const useSolarStore = create<SolarStore>()(
       setSelectedPlanet: (planet: PlanetVisualData | null) =>
         set({ selectedPlanet: planet }),
       setTotalQuestions: (count: number) => set({ totalQuestions: count }),
+      setUserName: (name: string) => set({ userName: name }),
       reset: () =>
         set({
           phase: 'landing',
@@ -37,6 +39,7 @@ export const useSolarStore = create<SolarStore>()(
           planetCount: PLANET_COUNT_DEFAULT,
           selectedPlanet: null,
           totalQuestions: 0,
+          userName: '',
         }),
     }),
     {

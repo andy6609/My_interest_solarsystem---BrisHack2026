@@ -10,7 +10,7 @@ export function detectPlatform(
   try {
     const data = JSON.parse(raw);
 
-    if (Array.isArray(data) && data[0]?.mapping) return 'chatgpt';
+    if (Array.isArray(data) && data[0]?.messages && data[0]?.id && data[0]?.create_time) return 'chatgpt';
     if (data.conversations?.[0]?.chat_messages) return 'claude';
     if (Array.isArray(data) && data[0]?.header && data[0]?.safeHtmlItem) return 'gemini';
 
