@@ -30,11 +30,12 @@ interface Props {
   selectedPlanet: PlanetVisualData | null;
   onPlanetClick: (planet: PlanetVisualData) => void;
   onDeselect: () => void;
+  onPlanetsChange: (planets: PlanetVisualData[]) => void;
 }
 
 export function SolarSystem({
   planets, categoryTree, totalQuestions, planetCount,
-  selectedPlanet, onPlanetClick, onDeselect,
+  selectedPlanet, onPlanetClick, onDeselect, onPlanetsChange,
 }: Props) {
   const { background, camera, fog, performance } = SCENE_CONFIG;
   const controllerRef = useRef<SceneControllerHandle>(null);
@@ -43,6 +44,7 @@ export function SolarSystem({
     tree: categoryTree,
     initialPlanets: planets,
     totalQuestions,
+    onPlanetsChange,
   });
 
   // planetCount 변경 시 전환 실행

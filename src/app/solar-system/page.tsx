@@ -296,6 +296,7 @@ export default function SolarSystemPage() {
           selectedPlanet={selectedPlanet}
           onPlanetClick={handlePlanetClick}
           onDeselect={handleDeselect}
+          onPlanetsChange={setPlanets}
         />
 
         {/* 왼쪽 패널 토글 버튼 */}

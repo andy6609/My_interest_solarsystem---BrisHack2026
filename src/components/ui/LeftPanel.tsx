@@ -23,7 +23,7 @@ function StatCard({ label, value }: { label: string; value: string | number }) {
 }
 
 function TrendIcon({ trend }: { trend: 'rising' | 'stable' | 'declining' }) {
-  if (trend === 'rising')   return <span className="text-green-400 text-xs">↑</span>;
+  if (trend === 'rising') return <span className="text-green-400 text-xs">↑</span>;
   if (trend === 'declining') return <span className="text-red-400 text-xs">↓</span>;
   return <span className="text-gray-400 text-xs">→</span>;
 }
@@ -38,7 +38,7 @@ export function LeftPanel({
     : '—';
 
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="flex flex-col gap-4 p-4 pt-20">
 
       {/* 헤더 */}
       <div>

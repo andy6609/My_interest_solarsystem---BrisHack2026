@@ -48,7 +48,7 @@ export function RightPanel({ planet, onClose }: Props) {
   return (
     <motion.div
       key={planet.id}
-      className="flex flex-col gap-4 p-4"
+      className="flex flex-col gap-4 p-4 pt-20"
       variants={stagger}
       initial="initial"
       animate="animate"
