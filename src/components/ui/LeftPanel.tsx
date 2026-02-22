@@ -65,7 +65,13 @@ export function LeftPanel({
 
       {/* 행성 목록 */}
       <div>
-        <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-2">Planets</p>
+        <div className="flex items-center px-3 mb-2 text-[10px] text-gray-500 uppercase tracking-widest">
+          <p className="flex-1">Planets</p>
+          <div className="flex items-center gap-2.5">
+            <span className="w-10 text-center">Trends</span>
+            <span className="w-8 text-right">Qs</span>
+          </div>
+        </div>
         <ul className="flex flex-col gap-1">
           {[...planets]
             .sort((a, b) => b.questionCount - a.questionCount)
@@ -86,8 +92,8 @@ export function LeftPanel({
                     style={{ backgroundColor: p.color, boxShadow: `0 0 6px ${p.color}80` }}
                   />
                   <span className="text-xs truncate flex-1">{p.name}</span>
-                  <TrendIcon trend={p.growthTrend} />
-                  <span className="text-[10px] text-gray-500 tabular-nums">{p.questionCount}</span>
+                  <div className="w-10 text-center shrink-0"><TrendIcon trend={p.growthTrend} /></div>
+                  <span className="w-8 text-right text-[10px] text-gray-500 tabular-nums shrink-0">{p.questionCount}</span>
                 </button>
               </li>
             ))}
