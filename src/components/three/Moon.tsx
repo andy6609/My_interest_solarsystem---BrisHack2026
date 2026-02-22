@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Text } from '@react-three/drei';
+import { Text, Billboard } from '@react-three/drei';
 import * as THREE from 'three';
 import type { MoonData } from '@/types';
 
@@ -42,19 +42,20 @@ export function Moon({ data, index, planetColor, showLabel = false }: Props) {
       </mesh>
 
       {showLabel && (
-        <Text
-          position={[0, data.size + 0.15, 0]}
-          fontSize={0.12}
-          color="white"
-          anchorX="center"
-          anchorY="bottom"
-          outlineWidth={0.02}
-          outlineColor="#000000"
-          fillOpacity={0.85}
-          renderOrder={2}
-        >
-          {data.name}
-        </Text>
+        <Billboard position={[0, data.size + 0.15, 0]}>
+          <Text
+            fontSize={0.12}
+            color="white"
+            anchorX="center"
+            anchorY="bottom"
+            outlineWidth={0.02}
+            outlineColor="#000000"
+            fillOpacity={0.85}
+            renderOrder={2}
+          >
+            {data.name}
+          </Text>
+        </Billboard>
       )}
     </group>
   );

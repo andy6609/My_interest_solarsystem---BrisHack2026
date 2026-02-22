@@ -2,7 +2,7 @@
 
 import { useRef, useState, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Text } from '@react-three/drei';
+import { Text, Billboard } from '@react-three/drei';
 import * as THREE from 'three';
 import { EllipticalOrbit, getPositionOnEllipse, getOrbitParams } from './EllipticalOrbit';
 import { Moon } from './Moon';
@@ -109,19 +109,20 @@ export function Planet({ data, index, total, selected = false, onClick }: Props)
 
         {/* 행성 이름 라벨 — drei Text (DOM 없이 3D 텍스트) */}
         {showLabel && (
-          <Text
-            position={[0, data.radius + 0.6, 0]}
-            fontSize={0.28}
-            color="white"
-            anchorX="center"
-            anchorY="bottom"
-            outlineWidth={0.04}
-            outlineColor="#000000"
-            fillOpacity={hovered ? 1 : 0.75}
-            renderOrder={1}
-          >
-            {`${data.name}  (${data.questionCount})`}
-          </Text>
+          <Billboard position={[0, data.radius + 0.6, 0]}>
+            <Text
+              fontSize={0.28}
+              color="white"
+              anchorX="center"
+              anchorY="bottom"
+              outlineWidth={0.04}
+              outlineColor="#000000"
+              fillOpacity={hovered ? 1 : 0.75}
+              renderOrder={1}
+            >
+              {`${data.name}  (${data.questionCount})`}
+            </Text>
+          </Billboard>
         )}
 
         {/* 위성들 */}
