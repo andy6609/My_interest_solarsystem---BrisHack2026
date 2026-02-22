@@ -57,11 +57,10 @@ export default function LandingPage() {
         </h1>
 
         <p className="text-gray-400 mt-4 mb-10 text-base leading-relaxed">
-          AI 대화 기록을 업로드하면
+          Upload your AI conversation history
           <br />
-          내 관심사가{' '}
-          <span className="text-star-blue font-medium">3D 태양계</span>로
-          시각화됩니다.
+          and watch your interests be visualized as a{' '}
+          <span className="text-star-blue font-medium">3D Solar System</span>.
         </p>
 
         <div className="flex flex-col gap-3 w-full max-w-xs mx-auto">

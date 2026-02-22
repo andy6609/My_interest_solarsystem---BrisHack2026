@@ -10,11 +10,11 @@ interface Step {
 }
 
 const STEPS: Step[] = [
-  { id: 'parse', label: '데이터 파싱', detail: '대화 기록 읽는 중...' },
-  { id: 'extract', label: '질문 추출', detail: 'user 메시지 필터링 중...' },
-  { id: 'classify', label: 'AI 분류', detail: 'Claude가 관심사를 분석하고 있습니다...' },
-  { id: 'map', label: '행성 생성', detail: '시각화 데이터 매핑 중...' },
-  { id: 'render', label: '태양계 구성', detail: '3D 씬을 준비하고 있습니다...' },
+  { id: 'parse', label: 'Parsing Data', detail: 'Reading conversation history...' },
+  { id: 'extract', label: 'Extracting Questions', detail: 'Filtering user messages...' },
+  { id: 'classify', label: 'AI Classification', detail: 'Claude is analyzing your interests...' },
+  { id: 'map', label: 'Generating Planets', detail: 'Mapping visualization data...' },
+  { id: 'render', label: 'Building Solar System', detail: 'Preparing 3D scene...' },
 ];
 
 interface Props {
@@ -62,7 +62,7 @@ export function LoadingSequence({ currentStep, questionCount }: Props) {
           animate={{ opacity: 1 }}
           className="text-gray-400 text-sm mb-8"
         >
-          {questionCount.toLocaleString()}개의 질문을 분석하고 있습니다{dots}
+          Analyzing {questionCount.toLocaleString()} questions{dots}
         </motion.p>
       )}
 

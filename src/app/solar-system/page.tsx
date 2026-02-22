@@ -256,7 +256,7 @@ export default function SolarSystemPage() {
           onClick={() => window.history.back()}
           className="px-6 py-2 rounded-xl border border-white/20 text-gray-400 hover:bg-white/10 transition-colors text-sm"
         >
-          돌아가기
+          Go Back
         </button>
       </div>
     );

@@ -45,10 +45,10 @@ export function AnalysisBadge({ progress }: Props) {
 
           <div className="flex flex-col gap-0.5 min-w-0">
             <p className="text-[10px] text-star-blue font-medium whitespace-nowrap">
-              정밀 분석 진행 중...
+              Refining analysis...
             </p>
             <p className="text-[9px] text-gray-500">
-              {progress.processedQuestions.toLocaleString()} / {progress.totalQuestions.toLocaleString()}개 처리됨
+              {progress.processedQuestions.toLocaleString()} / {progress.totalQuestions.toLocaleString()} processed
             </p>
           </div>
 
@@ -80,7 +80,7 @@ export function AnalysisBadge({ progress }: Props) {
         >
           <span className="text-green-400 text-xs">✓</span>
           <p className="text-[10px] text-green-400 whitespace-nowrap">
-            분석 완료 · {progress.totalQuestions.toLocaleString()}개 반영됨
+            Analysis complete · {progress.totalQuestions.toLocaleString()} applied
           </p>
         </motion.div>
       )}

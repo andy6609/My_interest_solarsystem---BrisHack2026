@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
 
     if (!tree || !planetCount) {
       return NextResponse.json(
-        { error: 'tree와 planetCount가 필요합니다' },
+        { error: 'tree and planetCount are required' },
         { status: 400 }
       );
     }

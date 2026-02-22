@@ -15,7 +15,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "My Interest Solar System",
-  description: "AI 대화 기록을 3D 태양계로 시각화하는 앱",
+  description: "An app that visualizes AI conversation history as a 3D solar system",
 };
 
 export default function RootLayout({

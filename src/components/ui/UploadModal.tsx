@@ -15,7 +15,7 @@ const PLATFORM_LABELS: Record<string, string> = {
   claude: 'Claude',
   gemini: 'Gemini',
   plaintext: 'Plain Text',
-  unknown: '알 수 없음',
+  unknown: 'Unknown',
 };
 
 const PLATFORM_COLORS: Record<string, string> = {
@@ -57,7 +57,7 @@ export function UploadModal({ isOpen, onClose, onParsed }: Props) {
       const json = await res.json();
 
       if (!res.ok || !json.success) {
-        throw new Error(json.details || json.error || '파싱 실패');
+        throw new Error(json.details || json.error || 'Parsing failed');
       }
 
       const data: ParsedData = json.data;
@@ -91,8 +91,8 @@ export function UploadModal({ isOpen, onClose, onParsed }: Props) {
   };
 
   const formatDate = (iso: string) => {
-    if (!iso) return '알 수 없음';
-    return new Date(iso).toLocaleDateString('ko-KR', {
+    if (!iso) return 'Unknown';
+    return new Date(iso).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -125,7 +125,7 @@ export function UploadModal({ isOpen, onClose, onParsed }: Props) {
           >
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-white">대화 기록 업로드</h2>
+              <h2 className="text-lg font-bold text-white">Upload Conversation History</h2>
               <button
                 onClick={onClose}
                 className="text-gray-500 hover:text-white transition-colors text-xl leading-none"
@@ -138,8 +138,8 @@ export function UploadModal({ isOpen, onClose, onParsed }: Props) {
             {!preview && (
               <div
                 className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${isDragging
-                    ? 'border-star-blue bg-star-blue/10'
-                    : 'border-white/20 hover:border-white/40'
+                  ? 'border-star-blue bg-star-blue/10'
+                  : 'border-white/20 hover:border-white/40'
                   }`}
                 onDragOver={(e) => {
                   e.preventDefault();
@@ -153,11 +153,11 @@ export function UploadModal({ isOpen, onClose, onParsed }: Props) {
                   {isLoading ? '⏳' : '📁'}
                 </div>
                 {isLoading ? (
-                  <p className="text-gray-400 text-sm">파싱 중...</p>
+                  <p className="text-gray-400 text-sm">Parsing...</p>
                 ) : (
                   <>
                     <p className="text-white font-medium text-sm mb-1">
-                      파일을 드래그하거나 클릭해서 선택
+                      Drag & drop a file or click to select
                     </p>
                     <p className="text-gray-500 text-xs">
                       .zip (ChatGPT) · .json (Claude/Gemini) · .txt
@@ -182,7 +182,7 @@ export function UploadModal({ isOpen, onClose, onParsed }: Props) {
                   className="ml-2 underline text-xs"
                   onClick={() => setError(null)}
                 >
-                  다시 시도
+                  Try Again
                 </button>
               </div>
             )}
@@ -202,7 +202,7 @@ export function UploadModal({ isOpen, onClose, onParsed }: Props) {
                   >
                     {PLATFORM_LABELS[preview.platform] || preview.platform}
                   </span>
-                  <span className="text-gray-500 text-xs">자동 감지됨</span>
+                  <span className="text-gray-500 text-xs">Auto-detected</span>
                 </div>
 
                 {/* 통계 카드 */}
@@ -211,20 +211,20 @@ export function UploadModal({ isOpen, onClose, onParsed }: Props) {
                     <div className="text-2xl font-bold text-star-blue">
                       {preview.totalMessages.toLocaleString()}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">총 메시지</div>
+                    <div className="text-xs text-gray-500 mt-1">Total Messages</div>
                   </div>
                   <div className="bg-white/5 rounded-xl p-3 text-center">
                     <div className="text-2xl font-bold text-star-blue">
                       {preview.totalConversations.toLocaleString()}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">대화 수</div>
+                    <div className="text-xs text-gray-500 mt-1">Conversations</div>
                   </div>
                 </div>
 
                 {/* 날짜 범위 */}
                 {preview.dateRange.start && (
                   <div className="bg-white/5 rounded-xl p-3">
-                    <div className="text-xs text-gray-500 mb-1">기간</div>
+                    <div className="text-xs text-gray-500 mb-1">Period</div>
                     <div className="text-sm text-white">
                       {formatDate(preview.dateRange.start)} →{' '}
                       {formatDate(preview.dateRange.end)}
@@ -241,13 +241,13 @@ export function UploadModal({ isOpen, onClose, onParsed }: Props) {
                     }}
                     className="flex-1 py-2.5 rounded-xl border border-white/20 text-gray-400 text-sm hover:bg-white/5 transition-colors"
                   >
-                    다시 선택
+                    Reselect
                   </button>
                   <button
                     onClick={handleConfirm}
                     className="flex-1 py-2.5 rounded-xl bg-star-blue text-space-bg font-bold text-sm hover:bg-star-glow transition-colors"
                   >
-                    태양계 만들기 →
+                    Create Solar System →
                   </button>
                 </div>
               </motion.div>
@@ -256,7 +256,7 @@ export function UploadModal({ isOpen, onClose, onParsed }: Props) {
             {/* 플랫폼 export 안내 */}
             {!preview && !isLoading && (
               <div className="mt-4 text-xs text-gray-600 space-y-1">
-                <p className="font-medium text-gray-500 mb-2">Export 방법:</p>
+                <p className="font-medium text-gray-500 mb-2">How to Export:</p>
                 <p>
                   <span className="text-green-500">ChatGPT</span> — Settings →
                   Data Controls → Export data

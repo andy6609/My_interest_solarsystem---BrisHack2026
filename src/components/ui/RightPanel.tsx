@@ -39,8 +39,8 @@ export function RightPanel({ planet, onClose }: Props) {
           className="w-16 h-16 rounded-full mb-4 opacity-30"
           style={{ background: 'radial-gradient(circle, #4FC3F7, transparent)' }}
         />
-        <p className="text-sm text-gray-500">행성을 클릭하면</p>
-        <p className="text-sm text-gray-500">상세 정보가 표시됩니다</p>
+        <p className="text-sm text-gray-500">Click a planet</p>
+        <p className="text-sm text-gray-500">to view details</p>
       </div>
     );
   }
@@ -59,7 +59,7 @@ export function RightPanel({ planet, onClose }: Props) {
           onClick={onClose}
           className="text-gray-500 hover:text-white text-xs transition-colors"
         >
-          ✕ 닫기
+          ✕ Close
         </button>
       </motion.div>
 
@@ -74,7 +74,7 @@ export function RightPanel({ planet, onClose }: Props) {
         />
         <div className="min-w-0">
           <h2 className="text-lg font-bold text-white truncate">{planet.name}</h2>
-          <p className="text-xs text-gray-400">{planet.questionCount}개 질문</p>
+          <p className="text-xs text-gray-400">{planet.questionCount} Qs</p>
         </div>
       </motion.div>
 

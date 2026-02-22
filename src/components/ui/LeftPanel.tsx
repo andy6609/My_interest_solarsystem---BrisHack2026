@@ -44,10 +44,10 @@ export function LeftPanel({
       <div>
         <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Overview</p>
         <div className="grid grid-cols-2 gap-2">
-          <StatCard label="총 질문" value={totalQuestions} />
-          <StatCard label="행성 수" value={planetCount} />
-          <StatCard label="플랫폼" value={platform} />
-          <StatCard label="기간" value={dateRange} />
+          <StatCard label="Total Qs" value={totalQuestions} />
+          <StatCard label="Planets" value={planetCount} />
+          <StatCard label="Platform" value={platform} />
+          <StatCard label="Period" value={dateRange} />
         </div>
       </div>
 

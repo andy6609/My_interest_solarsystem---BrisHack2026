@@ -49,7 +49,7 @@ async function callLLM(prompt: string, maxRetries = 2): Promise<CategoryNode[]> 
     }
   }
 
-  throw lastError ?? new Error('LLM 호출 실패');
+  throw lastError ?? new Error('LLM API Call Failed');
 }
 
 // ─── POST /api/analyze ───
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
       const trees = chunkTrees as CategoryNode[][];
       if (!trees || trees.length === 0) {
         return NextResponse.json(
-          { error: 'chunkTrees 없음' },
+          { error: 'No chunkTrees found' },
           { status: 400 }
         );
       }
@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
 
     if (userQuestions.length === 0) {
       return NextResponse.json(
-        { error: '분석할 질문이 없습니다' },
+        { error: 'No questions to analyze' },
         { status: 400 }
       );
     }

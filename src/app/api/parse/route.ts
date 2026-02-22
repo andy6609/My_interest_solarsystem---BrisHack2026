@@ -19,7 +19,7 @@ async function extractZip(buffer: ArrayBuffer): Promise<string> {
     return await zip.files[jsonFiles[0]].async('string');
   }
 
-  throw new Error('ZIP 안에서 지원 가능한 JSON 파일을 찾을 수 없습니다.');
+  throw new Error('Cannot find supported JSON files within the ZIP.');
 }
 
 export async function POST(req: NextRequest) {
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     // 파일 크기 제한: 50MB
     if (file.size > 50 * 1024 * 1024) {
       return NextResponse.json(
-        { error: '파일 크기가 50MB를 초과합니다.' },
+        { error: 'File size exceeds 50MB.' },
         { status: 413 }
       );
     }
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
     // 파싱 결과 검증
     if (parsed.messages.length === 0) {
       return NextResponse.json(
-        { error: '파싱된 메시지가 없습니다. 파일 형식을 확인해주세요.' },
+        { error: 'No parsed messages found. Please check the file format.' },
         { status: 422 }
       );
     }
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     console.error('Parse error:', error);
     return NextResponse.json(
       {
-        error: '파일 파싱에 실패했습니다.',
+        error: 'Failed to parse file.',
         details: (error as Error).message,
       },
       { status: 422 }

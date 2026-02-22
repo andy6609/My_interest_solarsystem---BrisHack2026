@@ -9,16 +9,16 @@ interface Props {
 }
 
 function getLabel(v: number): string {
-  if (v <= 5)  return '대분류';
-  if (v <= 10) return '중분류';
-  return '세분류';
+  if (v <= 5) return 'Broad';
+  if (v <= 10) return 'Medium';
+  return 'Specific';
 }
 
 export function PlanetCountSlider({ value, max = PLANET_COUNT_MAX, onChange }: Props) {
   return (
     <div className="flex items-center gap-3 bg-black/60 backdrop-blur border border-white/10 px-4 py-3 rounded-2xl">
       <span className="text-xs text-gray-500 uppercase tracking-widest whitespace-nowrap">
-        행성 수
+        Planets
       </span>
 
       <input
