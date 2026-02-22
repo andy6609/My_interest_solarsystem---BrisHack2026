@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
+import { Text } from '@react-three/drei';
 import * as THREE from 'three';
 import type { MoonData } from '@/types';
 
@@ -9,11 +10,11 @@ interface Props {
   data: MoonData;
   index: number;
   planetColor: string;
+  showLabel?: boolean; // 행성 클릭(선택) 시에만 true
 }
 
-export function Moon({ data, index, planetColor }: Props) {
+export function Moon({ data, index, planetColor, showLabel = false }: Props) {
   const groupRef = useRef<THREE.Group>(null);
-  // 위성마다 다른 공전 속도·위상
   const speed = 1.2 + index * 0.3;
   const phase = index * (Math.PI * 2 / 3);
 
@@ -39,6 +40,22 @@ export function Moon({ data, index, planetColor }: Props) {
           metalness={0.2}
         />
       </mesh>
+
+      {showLabel && (
+        <Text
+          position={[0, data.size + 0.15, 0]}
+          fontSize={0.12}
+          color="white"
+          anchorX="center"
+          anchorY="bottom"
+          outlineWidth={0.02}
+          outlineColor="#000000"
+          fillOpacity={0.85}
+          renderOrder={2}
+        >
+          {data.name}
+        </Text>
+      )}
     </group>
   );
 }

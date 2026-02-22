@@ -10,6 +10,7 @@ interface Props {
   data: PlanetVisualData;
   index: number;
   total: number;
+  selected?: boolean;
   onClick: (object: THREE.Object3D) => void;
 
   // 전환 타입
@@ -25,7 +26,7 @@ const SPRING_CFG = {
 };
 
 export function AnimatedPlanet({
-  data, index, total, onClick,
+  data, index, total, selected, onClick,
   entering = false,
   exiting = false,
   onExitDone,
@@ -53,6 +54,7 @@ export function AnimatedPlanet({
         data={data}
         index={index}
         total={total}
+        selected={selected}
         onClick={onClick}
       />
     </animated.group>

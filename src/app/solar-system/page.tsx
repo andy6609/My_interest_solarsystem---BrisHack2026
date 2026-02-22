@@ -293,9 +293,9 @@ export default function SolarSystemPage() {
           categoryTree={categoryTree}
           totalQuestions={totalQuestions}
           planetCount={planetCount}
+          selectedPlanet={selectedPlanet}
           onPlanetClick={handlePlanetClick}
           onDeselect={handleDeselect}
-
         />
 
         {/* 왼쪽 패널 토글 버튼 */}

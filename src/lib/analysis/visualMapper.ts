@@ -21,7 +21,7 @@ export function calculateVisuals(
     const ratio = cat.questionCount / (totalQuestions || 1);
     const slug = toSlug(cat.name);
 
-    const moons: MoonData[] = cat.subTopics.slice(0, 4).map((topic, i) => ({
+    const moons: MoonData[] = cat.subTopics.slice(0, 6).map((topic, i) => ({
       id: `moon-${slug}-${i}`,
       name: topic,
       orbitRadius: 0.8 + i * 0.4,

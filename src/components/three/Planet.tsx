@@ -12,10 +12,11 @@ interface Props {
   data: PlanetVisualData;
   index: number;
   total: number;
+  selected?: boolean; // 클릭(포커스)된 행성인지
   onClick: (object: THREE.Object3D) => void;
 }
 
-export function Planet({ data, index, total, onClick }: Props) {
+export function Planet({ data, index, total, selected = false, onClick }: Props) {
   const groupRef = useRef<THREE.Group>(null);
   const glowRef = useRef<THREE.MeshBasicMaterial>(null);
   const [hovered, setHovered] = useState(false);
@@ -126,7 +127,7 @@ export function Planet({ data, index, total, onClick }: Props) {
         {/* 위성들 */}
         {showMoons &&
           data.moons.map((moon, i) => (
-            <Moon key={moon.id} data={moon} index={i} planetColor={data.color} />
+            <Moon key={moon.id} data={moon} index={i} planetColor={data.color} showLabel={selected} />
           ))}
       </group>
     </>

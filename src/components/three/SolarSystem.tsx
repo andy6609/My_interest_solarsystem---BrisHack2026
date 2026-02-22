@@ -27,13 +27,14 @@ interface Props {
   categoryTree: CategoryNode[];
   totalQuestions: number;
   planetCount: number;
+  selectedPlanet: PlanetVisualData | null;
   onPlanetClick: (planet: PlanetVisualData) => void;
   onDeselect: () => void;
 }
 
 export function SolarSystem({
   planets, categoryTree, totalQuestions, planetCount,
-  onPlanetClick, onDeselect,
+  selectedPlanet, onPlanetClick, onDeselect,
 }: Props) {
   const { background, camera, fog, performance } = SCENE_CONFIG;
   const controllerRef = useRef<SceneControllerHandle>(null);
@@ -94,7 +95,8 @@ export function SolarSystem({
             data={slot.data}
             index={slot.index}
             total={slots.filter((s) => !s.exiting).length}
-            onClick={(pos) => handlePlanetClick(slot.data, pos)}
+            selected={selectedPlanet?.id === slot.data.id}
+            onClick={(obj) => handlePlanetClick(slot.data, obj)}
             entering={slot.entering}
             exiting={slot.exiting}
             onExitDone={() => removeSlot(slot.id)}
