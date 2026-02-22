@@ -17,11 +17,12 @@ export function AnimatedPanel({ isOpen, side, width = 'w-72', children }: Props)
       {isOpen && (
         <motion.div
           className={`
-            ${width} h-full shrink-0 flex flex-col
+            absolute top-0 bottom-0 ${side === 'left' ? 'left-0' : 'right-0'}
+            ${width} h-full flex flex-col
             bg-black/70 backdrop-blur-xl
             ${side === 'left' ? 'border-r' : 'border-l'} border-white/10
             overflow-y-auto overflow-x-hidden
-            z-10
+            z-20
           `}
           initial={{ x: xOffset, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}

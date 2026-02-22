@@ -272,9 +272,44 @@ export default function SolarSystemPage() {
   // ── 태양계 뷰 ──
 
   return (
-    <div className="w-screen h-screen bg-space-bg flex overflow-hidden">
+    <div className="relative w-screen h-screen bg-space-bg overflow-hidden">
 
-      {/* ── 왼쪽 패널 ── */}
+      {/* ── 3D 캔버스 (항상 전체 화면, 패널 영향 없음) ── */}
+      <SolarSystem
+        planets={planets}
+        categoryTree={categoryTree}
+        totalQuestions={totalQuestions}
+        planetCount={planetCount}
+        selectedPlanet={selectedPlanet}
+        onPlanetClick={handlePlanetClick}
+        onDeselect={handleDeselect}
+        onPlanetsChange={setPlanets}
+      />
+
+      {/* 왼쪽 패널 토글 버튼 */}
+      <button
+        onClick={() => setLeftOpen((v) => !v)}
+        className="absolute top-[90%] -translate-y-1/2 left-0 z-50
+          w-6 h-16 flex items-center justify-center
+          bg-white/10 backdrop-blur-md border border-white/20 border-l-0
+          text-gray-300 hover:text-white hover:bg-white/20 transition-all
+          rounded-r-xl"
+        title={leftOpen ? '패널 닫기' : '패널 열기'}
+      >
+        {leftOpen ? '◀' : '▶'}
+      </button>
+
+      {/* 프로그레시브 분석 뱃지 — 우측 상단 */}
+      <div className="absolute top-4 right-4 z-10">
+        <AnalysisBadge progress={analysisProgress} />
+      </div>
+
+      {/* 행성 수 슬라이더 — 하단 중앙 */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
+        <PlanetCountSlider value={planetCount} onChange={handleCountChange} />
+      </div>
+
+      {/* ── 왼쪽 패널 (절대 오버레이, 캔버스 크기 무영향) ── */}
       <AnimatedPanel isOpen={leftOpen} side="left" width="w-72">
         <LeftPanel
           planets={planets}
@@ -286,42 +321,7 @@ export default function SolarSystemPage() {
         />
       </AnimatedPanel>
 
-      {/* ── 3D 캔버스 (중앙) ── */}
-      <div className="relative flex-1 min-w-0">
-        <SolarSystem
-          planets={planets}
-          categoryTree={categoryTree}
-          totalQuestions={totalQuestions}
-          planetCount={planetCount}
-          selectedPlanet={selectedPlanet}
-          onPlanetClick={handlePlanetClick}
-          onDeselect={handleDeselect}
-          onPlanetsChange={setPlanets}
-        />
-
-        {/* 왼쪽 패널 토글 버튼 */}
-        <button
-          onClick={() => setLeftOpen((v) => !v)}
-          className="absolute top-4 left-4 z-10 w-8 h-8 flex items-center justify-center
-                     bg-black/60 border border-white/10 rounded-lg text-gray-400
-                     hover:text-white hover:bg-white/10 transition-colors text-xs"
-          title={leftOpen ? '패널 닫기' : '패널 열기'}
-        >
-          {leftOpen ? '◀' : '▶'}
-        </button>
-
-        {/* 프로그레시브 분석 뱃지 — 우측 상단 */}
-        <div className="absolute top-4 right-4 z-10">
-          <AnalysisBadge progress={analysisProgress} />
-        </div>
-
-        {/* 행성 수 슬라이더 — 하단 중앙 */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
-          <PlanetCountSlider value={planetCount} onChange={handleCountChange} />
-        </div>
-      </div>
-
-      {/* ── 오른쪽 패널 ── */}
+      {/* ── 오른쪽 패널 (절대 오버레이, 캔버스 크기 무영향) ── */}
       <AnimatedPanel isOpen={!!selectedPlanet} side="right" width="w-80">
         <RightPanel planet={selectedPlanet} onClose={handleDeselect} />
       </AnimatedPanel>
