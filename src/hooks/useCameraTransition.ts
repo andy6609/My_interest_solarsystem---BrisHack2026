@@ -9,80 +9,82 @@ interface CameraState {
   radius?: number;
 }
 
-const DAMPING = 0.03;   // 낮을수록 느리고 부드러움
-const THRESHOLD = 0.05;   // 이 거리 이하면 도착 판정
+const POS_DAMPING    = 0.04;   // 카메라 위치 보간 속도
+const LOOKAT_DAMPING = 0.10;   // 시선 보간 (위치보다 빠르게 → 행성이 먼저 시야에 들어옴)
+const THRESHOLD      = 0.3;    // 도착 판정 거리
+
+// 재사용 벡터 (GC 방지)
+const _planetPos = new THREE.Vector3();
+const _dir       = new THREE.Vector3();
+const _targetCam = new THREE.Vector3();
+const _delta     = new THREE.Vector3();
 
 export function useCameraTransition(controlsRef: React.RefObject<OrbitControlsImpl>) {
   const { camera } = useThree();
-  const stateRef = useRef<CameraState>({ type: 'reset' });
+  const stateRef   = useRef<CameraState>({ type: 'reset' });
   const isAnimating = useRef(false);
 
   useFrame(() => {
-    if (!stateRef.current) return;
+    const state    = stateRef.current;
     const controls = controlsRef.current;
 
-    // 행성에 포커싱된 상태일 때
-    if (stateRef.current.type === 'planet' && stateRef.current.object) {
-      const obj = stateRef.current.object;
-      const radius = stateRef.current.radius || 1;
+    // ── 행성 포커스 ──
+    if (state.type === 'planet' && state.object) {
+      const radius = state.radius || 1;
 
-      // 행성의 '현재' 위치 
-      const planetPos = obj.getWorldPosition(new THREE.Vector3());
+      // 매 프레임 행성의 현재 월드 위치 읽기
+      state.object.getWorldPosition(_planetPos);
 
-      const cfg = {
-        offsetHeight: 3,
-        offsetDistance: 8,
-      };
+      // 카메라 목표 위치: 행성 기준 바깥쪽 + 위
+      _dir.copy(_planetPos).normalize();
+      const backDist = radius * 5 + 4;    // 행성 크기에 비례한 거리
+      const height   = radius * 2 + 3;
 
-      const dir = planetPos.clone().normalize();
-      const targetPos = new THREE.Vector3(
-        dir.x * cfg.offsetDistance + planetPos.x * 0.2,
-        radius * 3 + cfg.offsetHeight,
-        dir.z * cfg.offsetDistance + planetPos.z * 0.2
-      );
+      _targetCam
+        .copy(_planetPos)
+        .addScaledVector(_dir, backDist)
+        .setY(_planetPos.y + height);
 
-      // 애니메이션 진행 중: 목표(TargetPos) 및 목표점(PlanetPos)으로 부드럽게 이동
       if (isAnimating.current) {
-        camera.position.lerp(targetPos, DAMPING);
+        // 진입 애니메이션: 위치는 부드럽게, 시선은 빠르게
+        camera.position.lerp(_targetCam, POS_DAMPING);
+
         if (controls) {
-          controls.target.lerp(planetPos, DAMPING);
+          controls.target.lerp(_planetPos, LOOKAT_DAMPING);
           controls.update();
         } else {
-          camera.lookAt(planetPos);
+          camera.lookAt(_planetPos);
         }
 
-        if (camera.position.distanceTo(targetPos) < THRESHOLD) {
-          isAnimating.current = false;
-          if (controls) controls.enabled = true; // 이동 끝난 후 유저 조작 허용
-        }
-      }
-      // 애니메이션 끝난 후: 행성은 계속 움직이므로 완전히 OrbitControls에 맞추어 따라가기(Tracking)
-      else if (controls && controls.enabled) {
-        // 행성이 움직인 만큼(마지막 프레임 대비 오차) 카메라에도 벡터 덧셈!
-        const deltaMove = planetPos.clone().sub(controls.target);
-        camera.position.add(deltaMove);
-        controls.target.copy(planetPos);
-        controls.update();
-      }
-    }
-    // 전체 태양계 뷰 상태일 때
-    else if (stateRef.current.type === 'reset') {
-      if (isAnimating.current) {
-        const resetPos = new THREE.Vector3(0, 15, 25);
-        const resetTarget = new THREE.Vector3(0, 0, 0);
-
-        camera.position.lerp(resetPos, DAMPING);
-        if (controls) {
-          controls.target.lerp(resetTarget, DAMPING);
-          controls.update();
-        } else {
-          camera.lookAt(resetTarget);
-        }
-
-        if (camera.position.distanceTo(resetPos) < THRESHOLD) {
+        if (camera.position.distanceTo(_targetCam) < THRESHOLD) {
           isAnimating.current = false;
           if (controls) controls.enabled = true;
         }
+      } else if (controls && controls.enabled) {
+        // 애니메이션 완료 후: 행성의 이동분만큼 카메라+타겟을 동일하게 이동 → 지연 0
+        _delta.copy(_planetPos).sub(controls.target);
+        camera.position.add(_delta);
+        controls.target.copy(_planetPos);
+        controls.update();
+      }
+    }
+
+    // ── 전체 태양계 뷰 복귀 ──
+    else if (state.type === 'reset' && isAnimating.current) {
+      const resetPos    = new THREE.Vector3(0, 15, 25);
+      const resetTarget = new THREE.Vector3(0, 0, 0);
+
+      camera.position.lerp(resetPos, POS_DAMPING);
+      if (controls) {
+        controls.target.lerp(resetTarget, LOOKAT_DAMPING);
+        controls.update();
+      } else {
+        camera.lookAt(resetTarget);
+      }
+
+      if (camera.position.distanceTo(resetPos) < THRESHOLD) {
+        isAnimating.current = false;
+        if (controls) controls.enabled = true;
       }
     }
   });
@@ -91,7 +93,7 @@ export function useCameraTransition(controlsRef: React.RefObject<OrbitControlsIm
     (object: THREE.Object3D, radius: number) => {
       stateRef.current = { type: 'planet', object, radius };
       isAnimating.current = true;
-      if (controlsRef.current) controlsRef.current.enabled = false; // 이동 중 조작 불가
+      if (controlsRef.current) controlsRef.current.enabled = false;
     },
     [controlsRef]
   );
@@ -99,9 +101,8 @@ export function useCameraTransition(controlsRef: React.RefObject<OrbitControlsIm
   const resetView = useCallback(() => {
     stateRef.current = { type: 'reset' };
     isAnimating.current = true;
-    if (controlsRef.current) controlsRef.current.enabled = false; // 이동 중 조작 불가
+    if (controlsRef.current) controlsRef.current.enabled = false;
   }, [controlsRef]);
 
-  // isAnimating을 리턴하여 외부에서 활용 가능하게 유지
   return { focusOnPlanet, resetView, isAnimating };
 }
