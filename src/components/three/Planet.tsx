@@ -16,7 +16,7 @@ interface Props {
   onClick: (object: THREE.Object3D) => void;
 }
 
-export function Planet({ data, index, total, selected = false, onClick }: Props) {
+export function Planet({ data, index, selected = false, onClick }: Props) {
   const groupRef = useRef<THREE.Group>(null);
   const glowRef = useRef<THREE.MeshBasicMaterial>(null);
   const [hovered, setHovered] = useState(false);
