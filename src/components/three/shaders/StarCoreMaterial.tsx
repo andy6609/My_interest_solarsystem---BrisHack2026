@@ -287,12 +287,12 @@ export function CentralStar() {
           style={{ pointerEvents: 'none' }}
         >
           <div
-            className="px-8 py-4 rounded-full text-4xl font-bold text-white whitespace-nowrap"
+            className="px-7 py-3 rounded-full text-3xl font-bold text-white whitespace-nowrap"
             style={{
-              background: 'rgba(79,195,247,0.25)',
-              border: '3px solid rgba(79,195,247,0.8)',
-              textShadow: '0 0 20px rgba(79,195,247,1)',
-              backdropFilter: 'blur(8px)',
+              background: 'rgba(79,195,247,0.22)',
+              border: '2.5px solid rgba(79,195,247,0.75)',
+              textShadow: '0 0 18px rgba(79,195,247,0.95)',
+              backdropFilter: 'blur(7px)',
             }}
           >
             {userName}
