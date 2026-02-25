@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { UploadModal } from '@/components/ui/UploadModal';
 import { useSolarStore } from '@/lib/store/useSolarStore';
+import { LandingStarBackground } from '@/components/three/LandingStarBackground';
 import type { ParsedData } from '@/types';
 
 export default function LandingPage() {
@@ -28,20 +29,8 @@ export default function LandingPage() {
   return (
     <main className="min-h-screen bg-space-bg flex flex-col items-center justify-center text-white relative overflow-hidden">
       {/* 별 배경 */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
-        {Array.from({ length: 80 }).map((_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full bg-white"
-            style={{
-              width: (i % 3 === 0 ? 2 : 1) + 'px',
-              height: (i % 3 === 0 ? 2 : 1) + 'px',
-              top: ((i * 137.5) % 100) + '%',
-              left: ((i * 97.3) % 100) + '%',
-              opacity: 0.2 + (i % 5) * 0.1,
-            }}
-          />
-        ))}
+      <div className="absolute inset-0 pointer-events-none">
+        <LandingStarBackground />
       </div>
 
       {/* 메인 콘텐츠 */}
