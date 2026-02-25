@@ -374,6 +374,7 @@ export async function GET() {
       totalQuestions: TOTAL_QUESTIONS,
       planetCount: 6,
       isSample: true,
+      userName: 'andy',
     },
   });
 }

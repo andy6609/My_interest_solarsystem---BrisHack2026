@@ -47,6 +47,7 @@ export default function SolarSystemPage() {
     setTotalQuestions,
     setPlanetCount,
     setSelectedPlanet,
+    setUserName,
   } = useSolarStore();
 
   const [loadingStep, setLoadingStep] = useState('parse');
@@ -97,6 +98,7 @@ export default function SolarSystemPage() {
       if (json.tree) setCategoryTree(json.tree);
       setPlanets(json.planets);
       setTotalQuestions(json.metadata.totalQuestions);
+      setUserName(json.metadata.userName);
       setParsedData({
         messages: [],
         metadata: {
