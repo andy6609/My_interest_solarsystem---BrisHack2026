@@ -13,11 +13,15 @@ interface Props {
   onPlanetSelect: (planet: PlanetVisualData) => void;
 }
 
-function StatCard({ label, value }: { label: string; value: string | number }) {
+function StatCard({ label, value, multiline }: { label: string; value: string | number; multiline?: boolean }) {
   return (
-    <div className="bg-white/5 rounded-xl p-3">
+    <div className="bg-white/5 rounded-xl p-3 min-h-[64px] flex flex-col justify-center">
       <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-0.5">{label}</p>
-      <p className="text-sm font-semibold text-gray-200 truncate">{value}</p>
+      {multiline && typeof value === 'string' ? (
+        <p className="text-sm font-semibold text-gray-200 leading-snug whitespace-pre-line">{value}</p>
+      ) : (
+        <p className="text-sm font-semibold text-gray-200 truncate">{value}</p>
+      )}
     </div>
   );
 }
@@ -34,7 +38,7 @@ export function LeftPanel({
 }: Props) {
   const platform = parsedData?.metadata.platform ?? '—';
   const dateRange = parsedData
-    ? `${parsedData.metadata.dateRange.start.slice(0, 10)} ~ ${parsedData.metadata.dateRange.end.slice(0, 10)}`
+    ? `${parsedData.metadata.dateRange.start.slice(0, 10)} ~\n${parsedData.metadata.dateRange.end.slice(0, 10)}`
     : '—';
 
   return (
@@ -47,7 +51,7 @@ export function LeftPanel({
           <StatCard label="Total Qs" value={totalQuestions} />
           <StatCard label="Planets" value={planetCount} />
           <StatCard label="Platform" value={platform} />
-          <StatCard label="Period" value={dateRange} />
+          <StatCard label="Period" value={dateRange} multiline />
         </div>
       </div>
 

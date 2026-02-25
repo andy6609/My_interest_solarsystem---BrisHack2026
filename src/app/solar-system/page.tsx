@@ -41,6 +41,7 @@ export default function SolarSystemPage() {
     totalQuestions,
     selectedPlanet,
     setPhase,
+    setParsedData,
     setPlanets,
     setCategoryTree,
     setTotalQuestions,
@@ -96,6 +97,15 @@ export default function SolarSystemPage() {
       if (json.tree) setCategoryTree(json.tree);
       setPlanets(json.planets);
       setTotalQuestions(json.metadata.totalQuestions);
+      setParsedData({
+        messages: [],
+        metadata: {
+          platform: 'gemini',
+          totalConversations: 300,
+          totalMessages: json.metadata.totalQuestions,
+          dateRange: { start: '2025-12-25T00:00:00Z', end: '2026-02-25T23:59:59Z' },
+        }
+      });
       await sleep(600);
       setPhase('solar-system');
     } catch (err) {
