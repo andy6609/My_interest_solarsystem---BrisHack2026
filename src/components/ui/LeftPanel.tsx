@@ -42,7 +42,7 @@ export function LeftPanel({
     : '—';
 
   return (
-    <div className="flex flex-col gap-4 p-4 pt-20">
+    <div className="flex flex-col gap-4 p-4 pt-32">
 
       {/* 헤더 */}
       <div>
