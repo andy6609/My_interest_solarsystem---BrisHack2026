@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { getPlanetsForCount } from '@/lib/analysis/hierarchy';
 import type { CategoryNode } from '@/types';
