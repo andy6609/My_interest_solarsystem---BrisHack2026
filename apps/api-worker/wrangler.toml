@@ -8,9 +8,9 @@ compatibility_flags = ["nodejs_compat"]
 binding = "ANALYSIS_CACHE"
 id = "793b86c1a1f84cc29d78284590bc43d0"
 
-# [[r2_buckets]]
-# binding = "UPLOAD_BUCKET"
-# bucket_name = "solar-system-uploads"
+[[r2_buckets]]
+binding = "UPLOAD_BUCKET"
+bucket_name = "solar-system-uploads"
 
 [durable_objects]
 bindings = [
