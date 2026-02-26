@@ -45,19 +45,27 @@ export function UploadModal({ isOpen, onClose, onParsed }: Props) {
     setParsedData(null);
     setIsLoading(true);
 
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+
     try {
+      // 1. R2에 업로드
       const formData = new FormData();
       formData.append('file', file);
-
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
-      const res = await fetch(`${apiUrl}/parse`, {
+      const uploadRes = await fetch(`${apiUrl}/upload`, {
         method: 'POST',
         body: formData,
       });
+      if (!uploadRes.ok) throw new Error('Upload failed');
+      const { key, fileName } = await uploadRes.json();
 
-      const json = await res.json();
-
-      if (!res.ok || !json.success) {
+      // 2. R2 key로 파싱
+      const parseRes = await fetch(`${apiUrl}/parse`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, fileName }),
+      });
+      const json = await parseRes.json();
+      if (!parseRes.ok || !json.success) {
         throw new Error(json.details || json.error || 'Parsing failed');
       }
 
