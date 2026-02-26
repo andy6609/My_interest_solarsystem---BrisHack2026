@@ -1,7 +1,11 @@
 import { Hono } from 'hono';
 import JSZip from 'jszip';
 
-export const parseRoute = new Hono();
+type Bindings = {
+  UPLOAD_BUCKET: R2Bucket;
+};
+
+export const parseRoute = new Hono<{ Bindings: Bindings }>();
 
 // ─── Types ───
 
@@ -142,36 +146,54 @@ function detectAndParse(raw: string): ParsedData {
   return parsePlainText(raw);
 }
 
-// ─── POST /parse ───
+// ─── helpers ───
+
+async function parseBuffer(buffer: ArrayBuffer, fileName: string): Promise<ParsedData> {
+  let raw: string;
+
+  if (fileName.endsWith('.zip')) {
+    const zip = await JSZip.loadAsync(buffer);
+    const conversationsFile = zip.file('conversations.json');
+    if (conversationsFile) {
+      raw = await conversationsFile.async('string');
+    } else {
+      const jsonFiles = Object.keys(zip.files).filter((f) => f.endsWith('.json') && !zip.files[f].dir);
+      if (jsonFiles.length === 0) throw new Error('Cannot find supported JSON files within the ZIP.');
+      raw = await zip.files[jsonFiles[0]].async('string');
+    }
+  } else {
+    raw = new TextDecoder().decode(buffer);
+  }
+
+  const parsed = detectAndParse(raw);
+  if (parsed.messages.length === 0) throw new Error('No parsed messages found. Please check the file format.');
+  return parsed;
+}
+
+// ─── POST /parse (formData — 기존 방식) ───
 
 parseRoute.post('/', async (c) => {
   try {
-    const formData = await c.req.formData();
-    const file = formData.get('file') as File;
+    const contentType = c.req.header('content-type') || '';
 
-    if (!file) return c.json({ error: 'No file provided' }, 400);
-    if (file.size > 50 * 1024 * 1024) return c.json({ error: 'File size exceeds 50MB.' }, 413);
-
-    let raw: string;
-
-    if (file.name.endsWith('.zip')) {
-      const buffer = await file.arrayBuffer();
-      const zip = await JSZip.loadAsync(buffer);
-      const conversationsFile = zip.file('conversations.json');
-      if (conversationsFile) {
-        raw = await conversationsFile.async('string');
-      } else {
-        const jsonFiles = Object.keys(zip.files).filter((f) => f.endsWith('.json') && !zip.files[f].dir);
-        if (jsonFiles.length === 0) return c.json({ error: 'Cannot find supported JSON files within the ZIP.' }, 422);
-        raw = await zip.files[jsonFiles[0]].async('string');
-      }
-    } else {
-      raw = await file.text();
+    // R2 key 방식: { key, fileName }
+    if (contentType.includes('application/json')) {
+      const { key, fileName } = await c.req.json<{ key: string; fileName: string }>();
+      const object = await c.env.UPLOAD_BUCKET.get(key);
+      if (!object) return c.json({ error: 'File not found in R2' }, 404);
+      const buffer = await object.arrayBuffer();
+      const name = fileName || object.customMetadata?.originalName || key;
+      const parsed = await parseBuffer(buffer, name);
+      return c.json({ success: true, data: parsed });
     }
 
-    const parsed = detectAndParse(raw);
-    if (parsed.messages.length === 0) return c.json({ error: 'No parsed messages found. Please check the file format.' }, 422);
-
+    // 직접 업로드 방식 (기존)
+    const formData = await c.req.formData();
+    const file = formData.get('file') as File;
+    if (!file) return c.json({ error: 'No file provided' }, 400);
+    if (file.size > 50 * 1024 * 1024) return c.json({ error: 'File size exceeds 50MB.' }, 413);
+    const buffer = await file.arrayBuffer();
+    const parsed = await parseBuffer(buffer, file.name);
     return c.json({ success: true, data: parsed });
   } catch (error) {
     console.error('Parse error:', error);
