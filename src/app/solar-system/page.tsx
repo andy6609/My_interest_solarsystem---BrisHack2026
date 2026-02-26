@@ -20,7 +20,7 @@ function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-function chunkArray<T>(arr: T[], size: number): T[][] {
+function _chunkArray<T>(arr: T[], size: number): T[][] {
   const chunks: T[][] = [];
   for (let i = 0; i < arr.length; i += size) {
     chunks.push(arr.slice(i, i + size));
@@ -161,7 +161,7 @@ export default function SolarSystemPage() {
       if (userQuestions.length <= 150) return;
 
       // ──────────────────────────────────────
-      // Phase 2: Background Refinement (전체 청크)
+      // Phase 2-3: DO에 위임 → 폴링
       // ──────────────────────────────────────
       setAnalysisProgress({
         status: 'refining',
@@ -170,90 +170,45 @@ export default function SolarSystemPage() {
         totalQuestions: userQuestions.length,
       });
 
-      const chunks = chunkArray(userQuestions, 200);
-      const chunkTrees: unknown[][] = [];
-
-      for (let i = 0; i < chunks.length; i++) {
-        // rate limit 안전 간격 (첫 청크 전에도 대기 — Phase 1과의 간격)
-        await sleep(15000);
-
-        try {
-          const chunkRes = await fetch(`${API_URL}/analyze`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              questions: chunks[i],
-              mode: 'chunk',
-            }),
-          });
-
-          const chunkJson = await chunkRes.json();
-          if (chunkRes.ok && chunkJson.success && chunkJson.chunkTree?.length) {
-            chunkTrees.push(chunkJson.chunkTree);
-          }
-        } catch {
-          // 개별 청크 실패 시 무시하고 계속 진행
-          console.warn(`Chunk ${i + 1} failed, skipping...`);
-        }
-
-        const processed = Math.min((i + 1) * 200, userQuestions.length);
-        const progress = Math.round(((i + 1) / chunks.length) * 80);
-
-        setAnalysisProgress({
-          status: 'refining',
-          progress,
-          processedQuestions: processed,
-          totalQuestions: userQuestions.length,
-        });
-      }
-
-      // 청크 결과가 없으면 Quick 결과 유지
-      if (chunkTrees.length === 0) {
-        setAnalysisProgress({
-          status: 'done',
-          progress: 100,
-          processedQuestions: userQuestions.length,
-          totalQuestions: userQuestions.length,
-        });
-        return;
-      }
-
-      // ──────────────────────────────────────
-      // Phase 3: Final Merge
-      // ──────────────────────────────────────
-      setAnalysisProgress({
-        status: 'refining',
-        progress: 90,
-        processedQuestions: userQuestions.length,
-        totalQuestions: userQuestions.length,
-      });
-
-      await sleep(15000); // merge 호출 전 rate limit 대기
-
-      const mergeRes = await fetch(`${API_URL}/analyze`, {
+      const startRes = await fetch(`${API_URL}/analyze/start-progressive`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          chunkTrees,
+          questions: userQuestions,
           planetCount,
-          totalQuestions: userQuestions.length,
-          mode: 'merge',
+          quickResult: quickJson,
         }),
       });
+      const { sessionId } = await startRes.json();
 
-      const mergeJson = await mergeRes.json();
-      if (mergeRes.ok && mergeJson.success) {
-        setCategoryTree(mergeJson.tree);
-        setPlanets(mergeJson.planets);
-        setTotalQuestions(mergeJson.metadata.totalQuestions);
-      }
+      const pollInterval = setInterval(async () => {
+        try {
+          const statusRes = await fetch(`${API_URL}/analyze/progress?sessionId=${sessionId}`);
+          const status = await statusRes.json();
 
-      setAnalysisProgress({
-        status: 'done',
-        progress: 100,
-        processedQuestions: userQuestions.length,
-        totalQuestions: userQuestions.length,
-      });
+          setAnalysisProgress({
+            status: status.status === 'done' ? 'done' : 'refining',
+            progress: status.progress ?? 0,
+            processedQuestions: (status.completedChunks ?? 0) * 200,
+            totalQuestions: userQuestions.length,
+          });
+
+          if (status.status === 'done' && status.finalResult) {
+            clearInterval(pollInterval);
+            const { tree, planets } = status.finalResult;
+            if (tree) setCategoryTree(tree);
+            if (planets) setPlanets(planets);
+            setAnalysisProgress({ status: 'done', progress: 100, processedQuestions: userQuestions.length, totalQuestions: userQuestions.length });
+          }
+
+          if (status.status === 'error') {
+            clearInterval(pollInterval);
+            console.error('Progressive analysis error:', status.error);
+          }
+        } catch {
+          // 폴링 실패는 무시하고 계속 시도
+        }
+      }, 5000);
     } catch (err) {
       setError((err as Error).message);
     }
