@@ -1,4 +1,4 @@
-name = "solar-system-api"
+name = "chatuniverse"
 main = "src/index.ts"
 compatibility_date = "2024-07-01"
 compatibility_flags = ["nodejs_compat"]
