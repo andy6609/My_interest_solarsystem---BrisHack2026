@@ -4,10 +4,9 @@ compatibility_date = "2024-07-01"
 compatibility_flags = ["nodejs_compat"]
 
 
-# 아래는 Phase 2-4에서 추가할 바인딩 (지금은 주석)
-# [[kv_namespaces]]
-# binding = "ANALYSIS_CACHE"
-# id = "xxxxx"
+[[kv_namespaces]]
+binding = "ANALYSIS_CACHE"
+id = "793b86c1a1f84cc29d78284590bc43d0"
 
 # [[r2_buckets]]
 # binding = "UPLOAD_BUCKET"
