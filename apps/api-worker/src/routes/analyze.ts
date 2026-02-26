@@ -1,7 +1,9 @@
 import { Hono } from 'hono';
+import { AnalysisCache } from '../services/cache';
 
 type Bindings = {
   ANTHROPIC_API_KEY: string;
+  ANALYSIS_CACHE: KVNamespace;
 };
 
 export const analyzeRoute = new Hono<{ Bindings: Bindings }>();
@@ -335,10 +337,19 @@ analyzeRoute.post('/', async (c) => {
         const planets = getPlanetsForCount(normalized, planetCount, totalQuestions);
         return c.json({ success: true, tree: normalized, planets, metadata: { totalQuestions, planetCount } });
       }
+      const mergeCache = new AnalysisCache(c.env.ANALYSIS_CACHE);
+      const mergeKey = `final:${await mergeCache.generateKey(trees.map((t) => JSON.stringify(t)))}`;
+      const cachedMerge = await mergeCache.get(mergeKey);
+      if (cachedMerge) {
+        console.log(`[cache] HIT: ${mergeKey.slice(0, 16)}...`);
+        return c.json({ ...cachedMerge, fromCache: true });
+      }
       const merged = await callLLM(apiKey, MERGE_PROMPT(trees));
       const normalized = normalizeCategoryTree(merged);
       const planets = getPlanetsForCount(normalized, planetCount, totalQuestions);
-      return c.json({ success: true, tree: normalized, planets, metadata: { totalQuestions, planetCount } });
+      const mergeResult = { success: true, tree: normalized, planets, metadata: { totalQuestions, planetCount } };
+      await mergeCache.set(mergeKey, mergeResult);
+      return c.json(mergeResult);
     }
 
     // mode=quick
@@ -349,12 +360,23 @@ analyzeRoute.post('/', async (c) => {
 
     if (userQuestions.length === 0) return c.json({ error: 'No questions to analyze' }, 400);
 
+    const cache = new AnalysisCache(c.env.ANALYSIS_CACHE);
+    const cacheKey = await cache.generateKey(userQuestions);
+    const cached = await cache.get(cacheKey);
+    if (cached) {
+      console.log(`[cache] HIT: ${cacheKey.slice(0, 16)}...`);
+      return c.json({ ...cached, fromCache: true });
+    }
+    console.log(`[cache] MISS: ${cacheKey.slice(0, 16)}...`);
+
     const sample = truncateQuestions(sampleEvenly(userQuestions, 150));
     const tree = await callLLM(apiKey, HIERARCHY_PROMPT(sample));
     const normalized = normalizeCategoryTree(tree);
     const planets = getPlanetsForCount(normalized, planetCount, userQuestions.length);
 
-    return c.json({ success: true, tree: normalized, planets, metadata: { totalQuestions: userQuestions.length, planetCount } });
+    const result = { success: true, tree: normalized, planets, metadata: { totalQuestions: userQuestions.length, planetCount } };
+    await cache.set(cacheKey, result);
+    return c.json(result);
   } catch (error) {
     console.error('Analyze error:', error);
     return c.json({ error: 'Analysis failed', details: (error as Error).message }, 500);

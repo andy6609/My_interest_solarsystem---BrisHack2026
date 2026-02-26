@@ -5,7 +5,7 @@ import { parseRoute } from './routes/parse';
 
 type Bindings = {
   ANTHROPIC_API_KEY: string;
-  // Phase 2에서 추가: ANALYSIS_CACHE: KVNamespace;
+  ANALYSIS_CACHE: KVNamespace;
   // Phase 3에서 추가: ANALYSIS_SESSION: DurableObjectNamespace;
   // Phase 4에서 추가: UPLOAD_BUCKET: R2Bucket;
 };
