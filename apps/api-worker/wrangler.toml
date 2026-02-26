@@ -3,8 +3,6 @@ main = "src/index.ts"
 compatibility_date = "2024-07-01"
 compatibility_flags = ["nodejs_compat"]
 
-[vars]
-ANTHROPIC_API_KEY = ""  # wrangler secret으로 별도 설정
 
 # 아래는 Phase 2-4에서 추가할 바인딩 (지금은 주석)
 # [[kv_namespaces]]
