@@ -107,8 +107,5 @@ function DevEffects() {
 // 익스포트 — dev/prod 자동 분기
 // ─────────────────────────────────────────────
 export function PostEffects() {
-  if (process.env.NODE_ENV === 'development') {
-    return <DevEffects />;
-  }
-  return <ProductionEffects />;
+  return <DevEffects />;
 }
