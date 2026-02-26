@@ -2,10 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { UploadModal } from '@/components/ui/UploadModal';
 import { useSolarStore } from '@/lib/store/useSolarStore';
-import { LandingStarBackground } from '@/components/three/LandingStarBackground';
 import type { ParsedData } from '@/types';
+
+const LandingStarBackground = dynamic(
+  () => import('@/components/three/LandingStarBackground').then(m => ({ default: m.LandingStarBackground })),
+  { ssr: false }
+);
 
 export default function LandingPage() {
   const router = useRouter();
