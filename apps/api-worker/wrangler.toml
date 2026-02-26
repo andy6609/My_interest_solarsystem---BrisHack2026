@@ -19,4 +19,4 @@ bindings = [
 
 [[migrations]]
 tag = "v1"
-new_classes = ["AnalysisSession"]
+new_sqlite_classes = ["AnalysisSession"]
