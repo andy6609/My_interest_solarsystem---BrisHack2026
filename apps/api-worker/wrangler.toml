@@ -12,5 +12,11 @@ id = "793b86c1a1f84cc29d78284590bc43d0"
 # binding = "UPLOAD_BUCKET"
 # bucket_name = "solar-system-uploads"
 
-# [durable_objects]
-# bindings = [{ name = "ANALYSIS_SESSION", class_name = "AnalysisSession" }]
+[durable_objects]
+bindings = [
+  { name = "ANALYSIS_SESSION", class_name = "AnalysisSession" }
+]
+
+[[migrations]]
+tag = "v1"
+new_classes = ["AnalysisSession"]

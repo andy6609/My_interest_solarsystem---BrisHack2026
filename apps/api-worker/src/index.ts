@@ -2,11 +2,14 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { analyzeRoute } from './routes/analyze';
 import { parseRoute } from './routes/parse';
+import { AnalysisSession } from './services/analysis-session';
+
+export { AnalysisSession };
 
 type Bindings = {
   ANTHROPIC_API_KEY: string;
   ANALYSIS_CACHE: KVNamespace;
-  // Phase 3에서 추가: ANALYSIS_SESSION: DurableObjectNamespace;
+  ANALYSIS_SESSION: DurableObjectNamespace;
   // Phase 4에서 추가: UPLOAD_BUCKET: R2Bucket;
 };
 
