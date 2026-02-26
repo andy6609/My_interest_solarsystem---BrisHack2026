@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import JSZip from 'jszip';
+
+export const runtime = 'edge';
 import { parseAuto } from '@/lib/parsers/detector';
 
 async function extractZip(buffer: ArrayBuffer): Promise<string> {
