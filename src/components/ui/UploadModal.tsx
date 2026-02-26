@@ -49,7 +49,8 @@ export function UploadModal({ isOpen, onClose, onParsed }: Props) {
       const formData = new FormData();
       formData.append('file', file);
 
-      const res = await fetch('/api/parse', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+      const res = await fetch(`${apiUrl}/parse`, {
         method: 'POST',
         body: formData,
       });

@@ -1,5 +1,7 @@
 'use client';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
+
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useSolarStore } from '@/lib/store/useSolarStore';
@@ -132,7 +134,7 @@ export default function SolarSystemPage() {
       // ──────────────────────────────────────
       setLoadingStep('classify');
 
-      const quickRes = await fetch('/api/analyze', {
+      const quickRes = await fetch(`${API_URL}/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -176,7 +178,7 @@ export default function SolarSystemPage() {
         await sleep(15000);
 
         try {
-          const chunkRes = await fetch('/api/analyze', {
+          const chunkRes = await fetch(`${API_URL}/analyze`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -228,7 +230,7 @@ export default function SolarSystemPage() {
 
       await sleep(15000); // merge 호출 전 rate limit 대기
 
-      const mergeRes = await fetch('/api/analyze', {
+      const mergeRes = await fetch(`${API_URL}/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
