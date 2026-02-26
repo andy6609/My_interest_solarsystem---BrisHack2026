@@ -4,6 +4,7 @@ import { AnalysisCache } from '../services/cache';
 type Bindings = {
   ANTHROPIC_API_KEY: string;
   ANALYSIS_CACHE: KVNamespace;
+  ANALYSIS_SESSION: DurableObjectNamespace;
 };
 
 export const analyzeRoute = new Hono<{ Bindings: Bindings }>();
@@ -381,4 +382,38 @@ analyzeRoute.post('/', async (c) => {
     console.error('Analyze error:', error);
     return c.json({ error: 'Analysis failed', details: (error as Error).message }, 500);
   }
+});
+
+// ─── POST /analyze/start-progressive ───
+
+analyzeRoute.post('/start-progressive', async (c) => {
+  const body = await c.req.json();
+  const { questions, planetCount, quickResult } = body;
+
+  const encoder = new TextEncoder();
+  const data = encoder.encode(questions.join('|'));
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const idStr = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+
+  const id = c.env.ANALYSIS_SESSION.idFromName(idStr);
+  const stub = c.env.ANALYSIS_SESSION.get(id);
+  const res = await stub.fetch(new Request('https://do/start', {
+    method: 'POST',
+    body: JSON.stringify({ questions, planetCount, quickResult }),
+  }));
+
+  return new Response(res.body, { headers: { 'Content-Type': 'application/json' } });
+});
+
+// ─── GET /analyze/progress?sessionId=xxx ───
+
+analyzeRoute.get('/progress', async (c) => {
+  const sessionId = c.req.query('sessionId');
+  if (!sessionId) return c.json({ error: 'sessionId required' }, 400);
+
+  const id = c.env.ANALYSIS_SESSION.idFromName(sessionId);
+  const stub = c.env.ANALYSIS_SESSION.get(id);
+  const res = await stub.fetch(new Request('https://do/status'));
+
+  return new Response(res.body, { headers: { 'Content-Type': 'application/json' } });
 });
