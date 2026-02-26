@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import { useSpring, animated } from '@react-spring/three';
+
+// @ts-expect-error: @react-spring/three types not yet compatible with React 19
+const AnimatedGroup = animated.group;
 import { Planet } from './Planet';
 import * as THREE from 'three';
 import type { PlanetVisualData } from '@/types';
@@ -49,7 +52,7 @@ export function AnimatedPlanet({
   if (!mounted) return null;
 
   return (
-    <animated.group scale={scale}>
+    <AnimatedGroup scale={scale}>
       <Planet
         data={data}
         index={index}
@@ -57,6 +60,6 @@ export function AnimatedPlanet({
         selected={selected}
         onClick={onClick}
       />
-    </animated.group>
+    </AnimatedGroup>
   );
 }
