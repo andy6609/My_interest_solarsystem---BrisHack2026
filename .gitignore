@@ -41,5 +41,6 @@ next-env.d.ts
 /myuniverse 복사본/
 /troubleshooting/
 
-# Markdown files
+# Markdown files (개인 메모용, README는 제외)
 *.md
+!README.md
