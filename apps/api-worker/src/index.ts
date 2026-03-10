@@ -17,7 +17,7 @@ type Bindings = {
 const app = new Hono<{ Bindings: Bindings }>();
 
 app.use('/*', cors({
-  origin: ['https://chatuniverse.pages.dev', 'http://localhost:3000'],
+  origin: ['https://chatuniverse.pages.dev', 'https://my-interest-solarsystem---brishack2026.pages.dev', 'http://localhost:3000'],
   allowMethods: ['GET', 'POST', 'OPTIONS'],
   allowHeaders: ['Content-Type'],
 }));

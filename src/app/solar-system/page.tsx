@@ -92,7 +92,7 @@ export default function SolarSystemPage() {
   const loadSample = async () => {
     setLoadingStep('map');
     try {
-      const res = await fetch('/api/sample');
+      const res = await fetch(`${API_URL}/api/sample`);
       const json = await res.json();
       if (!json.success) throw new Error(json.error);
 
