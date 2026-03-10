@@ -55,7 +55,7 @@ function ShootingStar() {
       -0.5 - Math.random() * 0.15,
       0
     ).normalize();
-    s.speed = 55 + Math.random() * 20;
+    s.speed = 27 + Math.random() * 10;
     s.maxLife = 0.6 + Math.random() * 0.2;
     s.life = 0;
     s.active = true;
