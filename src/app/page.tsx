@@ -41,21 +41,28 @@ export default function LandingPage() {
       {/* 메인 콘텐츠 */}
       <div className="relative z-10 text-center max-w-xl px-6">
         {/* 항성 아이콘 */}
-        <div className="mx-auto mb-8 w-24 h-24 rounded-full bg-star-blue/20 border-2 border-star-blue/60 flex items-center justify-center shadow-[0_0_60px_rgba(79,195,247,0.4)]">
-          <span className="text-5xl select-none">✦</span>
+        <div className="mx-auto mb-8 w-24 h-24 rounded-full flex items-center justify-center"
+          style={{
+            background: 'rgba(0, 85, 255, 0.2)',
+            border: '2px solid #0055FF',
+            boxShadow: '0 0 30px rgba(0, 85, 255, 0.8), inset 0 0 20px rgba(77, 136, 255, 0.5)',
+            backdropFilter: 'blur(5px)',
+          }}
+        >
+          <span className="text-5xl select-none" style={{ textShadow: "0 0 6px rgba(77, 136, 255, 0.4)" }}>✦</span>
         </div>
 
         <h1 className="text-4xl font-bold mb-2 text-white tracking-tight">
           My Interest
           <br />
-          <span className="text-star-blue">Solar System</span>
+          <span style={{ color: '#4d88ff', textShadow: "0 0 6px rgba(77, 136, 255, 0.4)" }}>Solar System</span>
         </h1>
 
         <p className="text-gray-400 mt-4 mb-10 text-base leading-relaxed">
           Upload your AI conversation history
           <br />
           and watch your interests be visualized as a{' '}
-          <span className="text-star-blue font-medium">3D Solar System</span>.
+          <span className="font-medium" style={{ color: '#4d88ff', textShadow: "0 0 6px rgba(77, 136, 255, 0.4)" }}>3D Solar System</span>.
         </p>
 
         <div className="flex flex-col gap-3 w-full max-w-xs mx-auto">
@@ -65,19 +72,38 @@ export default function LandingPage() {
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             placeholder="Your name (optional)"
-            className="w-full py-3 px-4 rounded-xl bg-white/5 border border-white/20 text-white placeholder-gray-500 text-base focus:outline-none focus:border-star-blue/60 focus:bg-white/10 transition-colors"
+            className="w-full py-3 px-4 rounded-xl text-white placeholder-gray-500 text-base focus:outline-none transition-colors"
+            style={{
+              background: 'rgba(0, 85, 255, 0.1)',
+              border: '1px solid #0055FF',
+              backdropFilter: 'blur(5px)',
+            }}
           />
 
           <button
             onClick={handleSample}
-            className="w-full py-3 rounded-xl bg-star-blue text-space-bg font-bold text-base hover:bg-star-glow transition-colors shadow-[0_0_20px_rgba(79,195,247,0.3)]"
+            className="w-full py-3 rounded-xl text-white font-bold text-base transition-all"
+            style={{
+              background: 'rgba(0, 85, 255, 0.2)',
+              border: '2px solid #0055FF',
+              boxShadow: '0 0 15px rgba(0, 85, 255, 0.8), inset 0 0 10px rgba(77, 136, 255, 0.5)',
+              textShadow: "0 0 6px rgba(77, 136, 255, 0.4)",
+              backdropFilter: 'blur(5px)',
+            }}
           >
             Try with Sample Data
           </button>
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="w-full py-3 rounded-xl border border-white/20 text-white font-medium text-base hover:bg-white/10 transition-colors"
+            className="w-full py-3 rounded-xl text-white font-medium text-base transition-all"
+            style={{
+              background: 'rgba(0, 85, 255, 0.1)',
+              border: '2px solid rgba(0, 85, 255, 0.5)',
+              boxShadow: '0 0 10px rgba(0, 85, 255, 0.4), inset 0 0 8px rgba(77, 136, 255, 0.2)',
+              textShadow: "0 0 6px rgba(77, 136, 255, 0.4)",
+              backdropFilter: 'blur(5px)',
+            }}
           >
             Upload Data
           </button>
